@@ -5,7 +5,7 @@ import java.io.ByteArrayInputStream;
 import java_cup.runtime.Symbol;
 
 import com.language.exceptions.ParsingException;
-import com.language.model.expression.Expression;
+import com.language.model.Expression;
 
 public class ExpressionParser {
 

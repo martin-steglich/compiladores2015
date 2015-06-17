@@ -1,4 +1,4 @@
-package com.language.model.expression;
+package com.language.model;
 
 import java.util.ArrayList;
 import java.util.List;

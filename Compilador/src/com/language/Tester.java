@@ -1,6 +1,6 @@
 package com.language;
 
-import com.language.model.expression.Expression;
+import com.language.model.Expression;
 import com.language.parser.ExpressionParser;
 
 public class Tester {

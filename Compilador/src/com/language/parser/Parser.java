@@ -6,7 +6,7 @@
 
 package com.language.parser;
 
-import com.language.model.expression.Expression;
+import com.language.model.Expression;
 
 /** CUP v0.11a beta 20060608 generated parser.
   * @version Sun Mar 23 18:45:00 UYT 2014
