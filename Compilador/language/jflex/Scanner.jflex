@@ -185,7 +185,25 @@ SIMPLE_QUOTE_TRIPLE_STRING: '''EJEMPLO'''
 	"?"						{ return new Symbol(sym.ERROR, yytext(), yyline); }
 }
 
+<DOUBLE_QUOTE_TRIPLE_STRING> {
+	\"{3}					|
+	{LineTerminator}		{ yybegin(YYINITIAL); }
+}
 
+<DOUBLE_QUOTE_ONCE_STRING> {
+	\"						|
+	{LineTerminator}		{ yybegin(YYINITIAL); }
+}
 
+<SIMPLE_QUOTE_TRIPLE_STRING> {
+	\'{3}					{ yybegin(YYINITIAL); }
+}
 
+<SIMPLE_QUOTE_ONCE_STRING> {
+	"'"						|
+	{LineTerminator}		{ yybegin(YYINITIAL); }
+}
+
+.|\n                      	{ }
+<<EOF>>                     { return null; }
 
