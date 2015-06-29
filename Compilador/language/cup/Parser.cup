@@ -9,15 +9,18 @@ terminal String PLUS, MINUS, MUL, DIV, DOT;
 terminal String TRUE, FALSE, NOT;
 terminal String EQUAL, NOT_EQUAL, LESS_THAN, GREATER_THAN, LESSOREQUAL_THAN, GREATEROREQUAL_THAN;
 terminal String AND, OR, NULL;
+terminal String INT_DIV;
 
 terminal String ID;
 terminal String INTEGER;
 terminal String DECIMAL;
 terminal String STRING;
+terminal String FLOAT;
 
 non terminal Expression LogicalOrExpression, LogicalAndExpression, EqualityExpression;
 non terminal Expression RelationalExpression, AdditiveExpression, MultiplicativeExpression, UnaryExpression;
 non terminal Expression SimpleExpression;
+non terminal Expression OpperArismetic, LogicalNotExpression;
 
 
 
