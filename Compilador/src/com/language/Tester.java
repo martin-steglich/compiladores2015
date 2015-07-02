@@ -10,7 +10,7 @@ public class Tester {
 		String exptext = "19 * x + 3";
 		
 		Expression expobj = ExpressionParser.parse(exptext);
-		
+	
 		System.out.println("Expresion obtenida: ");
 		System.out.println(expobj.toString());
 		
