@@ -3,16 +3,19 @@ package com.language.exceptions;
 @SuppressWarnings("serial")
 public class ParsingException extends RuntimeException {
 
-	public ParsingException(String message, Throwable cause) {
-		super(message, cause);
+	private String message;
+	
+	public ParsingException(int lineNumber, int columnNumber, String message) {
+		lineNumber++;
+		this.message = "ERROR: Linea: " + lineNumber + ", Columna: " + columnNumber + " - " + message;
 	}
 
-	public ParsingException(String message) {
-		super(message);
+	public ParsingException(int lineNumber, String message) {
+		lineNumber++;
+		this.message = "ERROR: Linea: " + lineNumber + " - " + message;
 	}
 
-	public ParsingException(Throwable cause) {
-		super(cause);
+	public String getMessage() {
+		return message;
 	}
-
 }

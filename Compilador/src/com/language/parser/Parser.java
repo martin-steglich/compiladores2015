@@ -8,7 +8,7 @@ package com.language.parser;
 
 import java.util.*;
 import java_cup.runtime.*;
-import com.language.model.expression.*;
+import com.language.model.*;
 import com.language.exceptions.*;
 
 /** CUP v0.11a beta 20060608 generated parser.

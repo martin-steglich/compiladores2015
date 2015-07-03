@@ -5,60 +5,15 @@ import java_cup.runtime.*;
 import com.language.model.expression.*;
 import com.language.exceptions.*;
 
-terminal String PLUS, MINUS, MUL, DIV, DOT;
-terminal String TRUE, FALSE, NOT;
-terminal String EQUAL, NOT_EQUAL, LESS_THAN, GREATER_THAN, LESSOREQUAL_THAN, GREATEROREQUAL_THAN;
-terminal String AND, OR, NULL;
-terminal String INT_DIV;
+terminal String ID, INTEGER, LONG, FLOAT, DOUBLE;
 
-terminal String ID;
-terminal String INTEGER;
-terminal String DECIMAL;
-terminal String STRING;
-terminal String FLOAT;
+terminal String ASSIGN;
 
-non terminal Expression LogicalOrExpression, LogicalAndExpression, EqualityExpression;
-non terminal Expression RelationalExpression, AdditiveExpression, MultiplicativeExpression, UnaryExpression;
-non terminal Expression SimpleExpression;
-non terminal Expression OpperArismetic, LogicalNotExpression;
+non terminal program, expression, module;
 
 
+program ::= module:list {: RESULT = new Program(list);:};
 
-LogicalAndExpression ::= EqualityExpression : e {: RESULT = e; :}
-| LogicalAndExpression : l AND : op EqualityExpression : r {: RESULT = new EBinaryOperation(l,op,r,lleft); :};
+module ::= expression | expression module;
 
-LogicalOrExpression ::= LogicalAndExpression : e {: RESULT = e; :}
-| LogicalOrExpression : l OR : op LogicalAndExpression : r {: RESULT = new EBinaryOperation(l,op,r,lleft); :};
-
-LogicalNotExpression ::= LogicalOrExpression : e {: RESULT = e; :}
-| NOT : op LogicalNotExpression : e {: RESULT = new EOperation(op,e,lleft); :};
-
-EqualityExpression ::= RelationalExpression : e {: RESULT = e; :}
-| EqualityExpression : l  EQUAL:op RelationalExpression : r {: RESULT = new EBinaryOperation(l,op,r,lleft); :}
-| EqualityExpression : l NOT_EQUAL : op RelationalExpression : r {: RESULT = new EBinaryOperation(l,op,r,lleft); :};
-
-RelationalExpression ::= OpperArismetic : e {: RESULT = e; :}
-| RelationalExpression : l LESS_THAN : op OpperArismetic : r {: RESULT = new EBinaryOperation(l,op,r,lleft); :}
-| RelationalExpression : l GREATER_THAN : op OpperArismetic : r {: RESULT = new EBinaryOperation(l,op,r,lleft); :}
-| RelationalExpression : l LESSOREQUAL_THAN : op OpperArismetic : r {: RESULT = new EBinaryOperation(l,op,r,lleft); :}
-| RelationalExpression : l GREATEROREQUAL_THAN : op OpperArismetic : r {: RESULT = new EBinaryOperation(l,op,r,lleft); :};
-
-AdditiveExpression ::= MultiplicativeExpression : e {: RESULT = e; :}
-| AdditiveExpression : l PLUS : op MultiplicativeExpression : r {: RESULT = new EBinaryOperation(l,op,r,lleft); :}
-| AdditiveExpression : l MINUS : op MultiplicativeExpression : r {: RESULT = new EBinaryOperation(l,op,r,lleft); :};
-
-MultiplicativeExpression ::= UnaryExpression : e {: RESULT = e; :}
-| MultiplicativeExpression : l MUL : op UnaryExpression : r {: RESULT = new EBinaryOperation(l,op,r,lleft); :}
-| MultiplicativeExpression : l DIV : op UnaryExpression : r {: RESULT = new EBinaryOperation(l,op,r,lleft); :}
-| MultiplicativeExpression : l INT_DIV : op UnaryExpression : r {: RESULT = new EBinaryOperation(l,op,r,lleft); :};
-
-UnaryExpression ::= SimpleExpression : e {: RESULT = e; :}
-| NOT : op UnaryExpression : e {: RESULT = new EUnaryOperation(op,e,eleft); :}; 
-
-SimpleExpression ::= NULL : e {: RESULT = new ENull(true, eleft); :}
-| TRUE : e {: RESULT = new EBoolean(true, eleft); :}
-| FALSE : e {: RESULT = new EBoolean(false, eleft); :}
-| FLOAT : e {: RESULT = new EDecimal(Float.valueOf(e), eleft); :}
-| INTEGER : e {: RESULT = new EInteger(Integer.valueOf(e), eleft); :}
-| STRING : e {: RESULT = new EString(e, eleft); :}
-| ID : e {: RESULT = new EIdentifier(e, eleft); :};
+expression ::= INTEGER | ID ASSIGN expression | DOUBLE | FLOAT| LONG;

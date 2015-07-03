@@ -1,18 +1,15 @@
 package com.language;
 
-import com.language.model.Expression;
+import com.language.model.Program;
 import com.language.parser.ExpressionParser;
 
 public class Tester {
 
 	public static void main(String[] args) {
 		
-		String exptext = "19 * x + 3";
+		String exptext = "c = 3";
 		
-		Expression expobj = ExpressionParser.parse(exptext);
-	
-		System.out.println("Expresion obtenida: ");
-		System.out.println(expobj.toString());
+		Program expobj = ExpressionParser.parse(exptext);
 		
 	}
 	
