@@ -5,15 +5,34 @@ import java_cup.runtime.*;
 import com.language.model.expression.*;
 import com.language.exceptions.*;
 
-terminal String ID, INTEGER, LONG, FLOAT, DOUBLE;
+terminal String ID, INTEGER, LONG, FLOAT, DOUBLE, STRING;
 
-terminal String ASSIGN;
+terminal String ASSIGN, PLUS, MINUS, MUL, DIV, EXP, INT_DIV, MOD;
 
-non terminal program, expression, module;
+terminal String PRINT;
+
+non terminal program, module, statement;
+non terminal Expression expression;
 
 
-program ::= module:list {: RESULT = new Program(list);:};
+precedence left PLUS, MINUS;
+precedence left MUL, DIV, EXP, INT_DIV, MOD;
 
-module ::= expression | expression module;
 
-expression ::= INTEGER | ID ASSIGN expression | DOUBLE | FLOAT| LONG;
+statement ::= expression 
+			| ID ASSIGN expression 
+			| PRINT:p expression:e {: RESULT = new PrintStatement((Expression) e); :};
+
+expression ::= INTEGER:i {: RESULT = new IntegerExpression(Integer.valueOf(i)); :}
+			| DOUBLE 
+			| FLOAT
+			| LONG 
+			| STRING
+			| expression PLUS expression
+			| expression MINUS expression
+			| expression DIV expression
+			| expression MUL expression
+			| MINUS expression
+			| expression EXP expression
+			| expression INT_DIV expression
+			| expression MOD expression;

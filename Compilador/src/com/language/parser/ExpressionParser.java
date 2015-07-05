@@ -5,11 +5,12 @@ import java.io.ByteArrayInputStream;
 import java_cup.runtime.Symbol;
 
 import com.language.exceptions.ParsingException;
-import com.language.model.Program;
+import com.language.model.expression.Expression;
+import com.language.model.statement.Statement;
 
 public class ExpressionParser {
 
-	public static Program parse(String expText) {
+	public static Statement parse(String expText) {
 
 		byte[] expbytes = expText.getBytes();
 		ByteArrayInputStream bais = new ByteArrayInputStream(expbytes);
@@ -18,7 +19,7 @@ public class ExpressionParser {
 		try {
 			Symbol topsym = parser.parse();
 
-			Program exp = (Program) topsym.value;
+			Statement exp = (Statement) topsym.value;
 			return exp;
 
 		} catch (Throwable ex) {

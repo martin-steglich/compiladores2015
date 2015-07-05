@@ -22,17 +22,19 @@ import com.language.model.expression.*;
 		this.sf=sf;
 	}
 
-	/*private Symbol symbol(int type) {
+	private Symbol symbol(int type) {
 		return new Symbol(type, yyline, yycolumn);
+		
 	}
+	
 	private Symbol symbol(int type, Object value) {
 		return new Symbol(type, yyline, yycolumn, value);
-	}*/
+	}
 %}
-/*
+
 %eofval{
     return symbol(sym.EOF);
-%eofval}*/
+%eofval}
 
 LineTerminator = \r|\n|\r\n
 InputCharacter = [^\r\n]
@@ -83,12 +85,22 @@ SIMPLE_QUOTE_TRIPLE_STRING: '''EJEMPLO'''
 
 <YYINITIAL> {
   	"="             		{ return new Symbol(sym.ASSIGN, yyline, yycolumn, "="); }
+  	"+"						{ return new Symbol(sym.PLUS, yyline, yycolumn, yytext()); }
+	"-"						{ return new Symbol(sym.MINUS, yyline, yycolumn, yytext()); }
+	"*"						{ return new Symbol(sym.MUL, yyline, yycolumn, yytext()); }
+	"/"						{ return new Symbol(sym.DIV, yyline, yycolumn, yytext()); }
+	"**"					{ return new Symbol(sym.EXP, yyline, yycolumn, yytext()); }
+	"//"					{ return new Symbol(sym.INT_DIV, yyline, yycolumn, yytext()); }
+	"%"						{ return new Symbol(sym.MOD, yyline, yycolumn, yytext()); }
+	"print"					{ return symbol(sym.PRINT); }
+
 	/* numeros */
-	{DecIntegerLiteral} 	{ return new Symbol(sym.INTEGER, yyline, yycolumn, yytext()); }
+	{DecIntegerLiteral} 	{ return symbol(sym.INTEGER, yytext());}
   	{DecLongLiteral}        { return new Symbol(sym.LONG, yyline, yycolumn, yytext()); }
   	{FloatLiteral}			{ return new Symbol(sym.FLOAT, yyline, yycolumn, yytext()); }
   	{DoubleLiteral}			{ return new Symbol(sym.DOUBLE, yyline, yycolumn, yytext()); }
   	{FloatLiteral}[jJ]		{ return new Symbol(sym.FLOAT, yyline, yycolumn, yytext()); }
+  	
   	
   	/* comentarios */
   	{Comment}				{ /* ignore */ }
@@ -96,8 +108,53 @@ SIMPLE_QUOTE_TRIPLE_STRING: '''EJEMPLO'''
 	{WhiteSpace}			{ /* ignore */ }
 	/* identificadores */
 	{Identifier}			{ return new Symbol(sym.ID, yyline, yycolumn, yytext()); }
+	
+	/* string */
+	'{3}					{ 
+								string.setLength(0);
+								yybegin(SIMPLE_QUOTE_TRIPLE_STRING);
+							}
+	'						{ 
+								string.setLength(0);
+								yybegin(SIMPLE_QUOTE_ONCE_STRING);
+							}
+	
 }
-s
+<SIMPLE_QUOTE_TRIPLE_STRING> {
+	'{3}					{ 
+								yybegin(YYINITIAL); 
+								return new Symbol(sym.STRING, yyline, yycolumn, string.toString());
+							}
+	.						{
+								string.append(yytext());
+							}
+}
+<SIMPLE_QUOTE_ONCE_STRING> {
+	'						{
+								yybegin(YYINITIAL);
+								return new Symbol(sym.STRING, yyline, yycolumn, string.toString());
+							}
+	\\t						{ 
+								string.append('\t');
+							}
+	\\n						{
+								string.append('\n');
+							}
+	\\r						{
+								string.append('\r');	
+							}
+	\\\'     				{
+								string.append('\"');	
+							}
+	\\						{
+								string.append('\\');	
+							}
+	.						{
+								string.append(yytext());
+							}
+}
+
+
 . 							{ 
 								throw new ParsingException(yyline, yycolumn, "No se reconoce lexicograficamente el caracter: " + yytext());
 							}

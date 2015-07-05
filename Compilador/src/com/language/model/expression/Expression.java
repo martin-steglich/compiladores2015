@@ -1,29 +1,36 @@
-package com.language.model;
+package com.language.model.expression;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Program {
+//import com.language.exceptions.CompilerException;
+import com.language.model.type.Type;
 
-	private Object value; 
-	private List<Program> arguments;
+public abstract class Expression {
 	
-	public Program(Object value) {
+	public abstract void printExp();
+	public abstract Type evaluate() /*throws CompilerException*/;
+	public abstract String getType();
+
+	/*private Object value; 
+	private List<Expression> arguments;
+	
+	public Expression(Object value) {
 		this.value = value;
-		this.arguments = new ArrayList<Program>();
+		this.arguments = new ArrayList<Expression>();
 	}
 	
-	public Program(Object value, List<Program> arguments) {
+	public Expression(Object value, List<Expression> arguments) {
 		this.value = value;
 		this.arguments = arguments;
 		if (this.arguments == null) {
-			this.arguments = new ArrayList<Program>();
+			this.arguments = new ArrayList<Expression>();
 		}
 	}
 	
-	public Program(Object value, Program left, Program right) {
+	public Expression(Object value, Expression left, Expression right) {
 		this.value = value;
-		this.arguments = new ArrayList<Program>();
+		this.arguments = new ArrayList<Expression>();
 		this.arguments.add(left);
 		this.arguments.add(right);
 	}
@@ -36,11 +43,11 @@ public class Program {
 		this.value = value;
 	}
 	
-	public List<Program> getArguments() {
+	public List<Expression> getArguments() {
 		return arguments;
 	}
 	
-	public void setArguments(List<Program> arguments) {
+	public void setArguments(List<Expression> arguments) {
 		this.arguments = arguments;
 	} 
 
@@ -63,7 +70,7 @@ public class Program {
 			sb.append("(\n");
 	
 			for (int i = 0; i < this.arguments.size(); i++) {
-				Program exparg = this.arguments.get(i);
+				Expression exparg = this.arguments.get(i);
 				if (exparg == null) {
 					sb.append("\n");
 				} else {
@@ -79,5 +86,5 @@ public class Program {
 		sb.append("\n");
 		
 		return sb.toString();
-	}
+	}*/
 }
