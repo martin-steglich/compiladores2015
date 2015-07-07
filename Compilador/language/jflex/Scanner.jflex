@@ -72,7 +72,7 @@ Exponent = [eE] [+-]? [0-9]+
 DoubleStringCharacter = [^\r\n\"\\]
 SimpleStringCharacter = [^\r\n\'\\]
 
-/* definicion de estdos */
+/* definicion de estados */
 /*
 DOUBLE_QUOTE_ONCE_STRING: "ESTO"
 SIMPLE_QUOTE_ONCE_STRING: 'ES'
