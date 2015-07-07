@@ -19,20 +19,16 @@ precedence left PLUS, MINUS;
 precedence left MUL, DIV, EXP, INT_DIV, MOD;
 
 
-statement ::= expression 
-			| ID ASSIGN expression 
+statement ::= expression:e {: RESULT = e; :} 
+			| ID ASSIGN expression:e {: RESULT = (Expression)e; :}
 			| PRINT:p expression:e {: RESULT = new PrintStatement((Expression) e); :};
 
 expression ::= INTEGER:i {: RESULT = new IntegerExpression(Integer.valueOf(i)); :}
-			| DOUBLE 
-			| FLOAT
-			| LONG 
-			| STRING
-			| expression PLUS expression
-			| expression MINUS expression
-			| expression DIV expression
-			| expression MUL expression
-			| MINUS expression
-			| expression EXP expression
-			| expression INT_DIV expression
-			| expression MOD expression;
+			| expression PLUS expression:e {: RESULT = (Expression)e ;:}
+			| expression MINUS expression:e {: RESULT = (Expression)e; :}
+			| expression DIV expression:e {: RESULT = (Expression)e; :}
+			| expression MUL expression:e {: RESULT = (Expression)e; :}
+			| MINUS expression:e {: RESULT = (Expression)e; :}
+			| expression EXP expression:e {: RESULT = (Expression)e; :}
+			| expression INT_DIV expression:e {: RESULT = (Expression)e; :}
+			| expression MOD expression:e {: RESULT =(Expression) e; :};

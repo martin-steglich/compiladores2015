@@ -8,10 +8,10 @@ public class Tester {
 
 	public static void main(String[] args) {
 		
-		String exptext = "3";
+		String exptext = "print 3";
 		
 		Statement exp = ExpressionParser.parse(exptext);
-		//System.out.println(exp.toString());
+		exp.execute();
 
 		
 	}

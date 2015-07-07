@@ -17,10 +17,11 @@ public class ExpressionParser {
 
 		Parser parser = new Parser(new Scanner(bais));
 		try {
-			Symbol topsym = parser.parse();
+			Object result = parser.parse().value;
+			/*Symbol topsym = parser.parse();
 
-			Statement exp = (Statement) topsym.value;
-			return exp;
+			Statement exp = (Statement) topsym.value;*/
+			return (Statement)result;
 
 		} catch (Throwable ex) {
 			throw new ParsingException(1, "Error parsing source: " + ex.getMessage());
