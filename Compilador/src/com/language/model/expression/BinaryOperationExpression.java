@@ -45,17 +45,18 @@ public class BinaryOperationExpression extends Expression {
 		    throw new CompilerException(lineNumber, "La funcion evaluada no tiene valor de retorno");
 		} else {
 			boolean intInt = (izq.getType() == 0) && (der.getType() == 0);
-			//boolean intString = (izq.getType() == 0) && (der.getType() == 4);
+			boolean intString = (izq.getType() == 0) && (der.getType() == 4);
 			boolean intLong = (izq.getType() == 0) && (der.getType() == 2);
 			boolean intFloat = (izq.getType() == 0) && (der.getType() == 1);
 			boolean intBoolean = (izq.getType() == 0) && (der.getType() == 5);
 			
-//			boolean stringError = (izq.getType() == 3) && 
-//								((der.getType() == 0) || (der.getType() == 1) || (der.getType() == 2) || (der.getType() == 5));
-			boolean stringExito = (izq.getType() == 3) && (der.getType() == 3);
+			boolean stringInt = (izq.getType() == 3) && (der.getType() == 0);
+			boolean stringString = (izq.getType() == 3) && (der.getType() == 3);
+			boolean stringLong = (izq.getType() == 3) && (der.getType() == 2);
+			boolean stringBoolean = (izq.getType() == 3) && (der.getType() == 5);
 			
 			boolean longInt = (izq.getType() == 2) && (der.getType() == 0);
-//			boolean longString = (izq.getType() == 2) && (der.getType() == 4);
+			boolean longString = (izq.getType() == 2) && (der.getType() == 4);
 			boolean longLong = (izq.getType() == 2) && (der.getType() == 3);
 			boolean longFloat = (izq.getType() == 2) && (der.getType() == 1);
 			boolean longBoolean = (izq.getType() == 2) && (der.getType() == 5);
@@ -67,7 +68,7 @@ public class BinaryOperationExpression extends Expression {
 			boolean floatBoolean = (izq.getType() == 1) && (der.getType() == 5);
 			
 			boolean booleanInt = (izq.getType() == 5) && (der.getType() == 0);
-//			boolean booleanString = (izq.getType() == 5) && (der.getType() == 4);
+			boolean booleanString = (izq.getType() == 5) && (der.getType() == 4);
 			boolean booleanLong = (izq.getType() == 5) && (der.getType() == 3);
 			boolean booleanFloat = (izq.getType() == 5) && (der.getType() == 1);
 			boolean booleanBoolean = (izq.getType() == 5) && (der.getType() == 5);
@@ -90,7 +91,7 @@ public class BinaryOperationExpression extends Expression {
 					int resultado = ((IntegerType)izq).getValue() + ((BooleanType)der).getEquivalentInt();
 					res = new IntegerType(resultado);
 				}
-				else if(stringExito){
+				else if(stringString){
 					String resultado = ((StringType)izq).getText() + ((StringType)der).getText();
 					res = new StringType(resultado);
 				}
@@ -231,6 +232,38 @@ public class BinaryOperationExpression extends Expression {
 					int resultado = ((IntegerType)izq).getValue() * ((BooleanType)der).getEquivalentInt();
 					res = new IntegerType(resultado);
 				}
+				else if(intString){
+					int rep = ((IntegerType)izq).getValue();
+					String resultado = "";
+					for(int i = 1; i<= rep; i++)
+						resultado += ((StringType)der).getText();
+					res = new StringType(resultado);
+				}
+				else if(stringString){
+					String resultado = ((StringType)izq).getText() + ((StringType)der).getText();
+					res = new StringType(resultado);
+				}
+				else if(stringInt){
+					int rep = ((IntegerType)der).getValue();
+					String resultado = "";
+					for(int i = 1; i<= rep; i++)
+						resultado += ((StringType)izq).getText();
+					res = new StringType(resultado);
+				}
+				else if(stringBoolean){
+					int rep = ((BooleanType)der).getEquivalentInt();
+					String resultado = "";
+					for(int i = 1; i<= rep; i++)
+						resultado += ((StringType)izq).getText();
+					res = new StringType(resultado);
+				}
+				else if(stringLong){
+					long rep = ((LongType)der).getValue();
+					String resultado = "";
+					for(long i = 1; i<= rep; i++)
+						resultado += ((StringType)izq).getText();
+					res = new StringType(resultado);
+				}
 				else if(longInt){
 					long resultado = ((LongType)izq).getValue() * ((IntegerType)der).getValue();
 					res = new LongType(resultado);
@@ -246,6 +279,13 @@ public class BinaryOperationExpression extends Expression {
 				else if(longBoolean){
 					long resultado = ((LongType)izq).getValue() * ((BooleanType)der).getEquivalentInt();
 					res = new LongType(resultado);
+				}
+				else if(longString){
+					long rep = ((LongType)izq).getValue();
+					String resultado = "";
+					for(long i = 1; i<= rep; i++)
+						resultado += ((StringType)der).getText();
+					res = new StringType(resultado);
 				}
 				else if(floatInt){
 					float resultado = ((FloatType)izq).getValue() * ((IntegerType)der).getValue();
@@ -278,6 +318,13 @@ public class BinaryOperationExpression extends Expression {
 				else if(booleanBoolean){
 					int resultado = ((BooleanType)izq).getEquivalentInt() * ((BooleanType)der).getEquivalentInt();
 					res = new IntegerType(resultado);
+				}
+				else if(booleanString){
+					int rep = ((BooleanType)izq).getEquivalentInt();
+					String resultado = "";
+					for(int i = 1; i<= rep; i++)
+						resultado += ((StringType)der).getText();
+					res = new StringType(resultado);
 				}
 			    else {
                     throw new CompilerException(lineNumber, "Tipos de datos no esperados para la operacion multiplicacion");

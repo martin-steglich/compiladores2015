@@ -51,6 +51,7 @@ Identifier = [a-zA-Z][a-zA-Z0-9_]*
 DecIntegerLiteral = 0 | [1-9][0-9]*
 DecLongLiteral    = {DecIntegerLiteral}[lL]
 
+
 /*HexIntegerLiteral = 0 [xX] 0* {HexDigit} {1,8}
 HexLongLiteral    = 0 [xX] 0* {HexDigit} {1,16} [lL]
 HexDigit          = [0-9a-fA-F]
@@ -92,6 +93,21 @@ SIMPLE_QUOTE_TRIPLE_STRING: '''EJEMPLO'''
 	"**"					{ return new Symbol(sym.EXP, yyline, yycolumn, yytext()); }
 	"//"					{ return new Symbol(sym.INT_DIV, yyline, yycolumn, yytext()); }
 	"%"						{ return new Symbol(sym.MOD, yyline, yycolumn, yytext()); }
+	"&"						{ return symbol(sym.AND_BIT); }
+	"|"						{ return symbol(sym.OR_BIT); }
+	"^"						{ return symbol(sym.XOR_BIT); }
+	"~"						{ return symbol(sym.NOT_BIT); }
+	"<<"					{ return symbol(sym.LSHIFT_BIT); }
+	">>"					{ return symbol(sym.RSHIFT_BIT); }
+	"and"					{ return symbol(sym.AND); }
+	"or"					{ return symbol(sym.OR); }
+	"not"					{ return symbol(sym.NOT); }
+	"=="					{ return symbol(sym.EQUALS); }
+	"!="					{ return symbol(sym.NOT_EQUALS); }
+	"<"						{ return symbol(sym.LESS_THAN); }
+	">"						{ return symbol(sym.GREAT_THAN); }
+	"<="					{ return symbol(sym.LESSEQUAL_THAN); }
+	">="					{ return symbol(sym.GREATEQUAL_THAN); }
 	"print"					{ return symbol(sym.PRINT); }
 	"True"					{ return symbol(sym.TRUE); }
 	"False"					{ return symbol(sym.FALSE); }
