@@ -1,18 +1,19 @@
 package com.language;
 
 import com.language.exceptions.CompilerException;
-import com.language.model.statement.Statement;
-import com.language.parser.ExpressionParser;
+import com.language.model.program.Program;
+import com.language.parser.ProgramParser;
 
 public class Tester {
 
 	public static void main(String[] args) {
 		
-		String exptext = "print 2L";
+		String exptext = "print 3";
 		
-		Statement exp = ExpressionParser.parse(exptext);
+		Program program = ProgramParser.parse(exptext);
+		
 		try {
-			exp.execute();
+			program.execute();
 		} catch (CompilerException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
