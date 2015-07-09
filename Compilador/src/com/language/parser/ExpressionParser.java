@@ -19,6 +19,7 @@ public class ExpressionParser {
 		try {
 			Object result = parser.parse().value;
 			/*Symbol topsym = parser.parse();
+			 
 
 			Statement exp = (Statement) topsym.value;*/
 			return (Statement)result;

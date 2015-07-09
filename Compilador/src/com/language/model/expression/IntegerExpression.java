@@ -22,11 +22,11 @@ public class IntegerExpression extends Expression {
 	}
 
 	public Type evaluate() {
-		Type t = new TInteger(num);
+		Type t = new IntegerType(num);
 		return t;
 	}
 
-	public float getNum() {
+	public int getNum() {
 		return num;
 	}
 

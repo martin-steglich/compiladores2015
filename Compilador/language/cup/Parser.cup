@@ -3,9 +3,10 @@ package com.language.parser;
 import java.util.*;
 import java_cup.runtime.*;
 import com.language.model.expression.*;
+import com.language.model.statement.*;
 import com.language.exceptions.*;
 
-terminal String ID, INTEGER, LONG, FLOAT, DOUBLE, STRING;
+terminal String ID, INTEGER, LONG, FLOAT, STRING, TRUE, FALSE;
 
 terminal String ASSIGN, PLUS, MINUS, MUL, DIV, EXP, INT_DIV, MOD;
 
@@ -20,11 +21,16 @@ precedence left MUL, DIV, EXP, INT_DIV, MOD;
 
 
 statement ::= expression:e {: RESULT = e; :} 
-			| ID ASSIGN expression:e {: RESULT = (Expression)e; :}
+			| ID:i ASSIGN expression:e {: RESULT = new AssignStatement(i, (Expression)e); :}
 			| PRINT:p expression:e {: RESULT = new PrintStatement((Expression) e); :};
 
 expression ::= INTEGER:i {: RESULT = new IntegerExpression(Integer.valueOf(i)); :}
-			| expression PLUS expression:e {: RESULT = (Expression)e ;:}
+			| STRING:s {: RESULT = new StringExpression(s); :}
+			| LONG:l {: RESULT = new LongExpression(Long.valueOf(l)); :}
+			| FLOAT:f {: RESULT = new FloatExpression(Float.valueOf(f)); :}
+			| TRUE:b {: RESULT = new BooleanExpression(true); :}
+			| FALSE:b {: RESULT = new BooleanExpression(false); :}
+			| expression:l PLUS expression:r {: RESULT = new BinaryOperationExpression((Expression)l, "+", (Expression)r) ;:}
 			| expression MINUS expression:e {: RESULT = (Expression)e; :}
 			| expression DIV expression:e {: RESULT = (Expression)e; :}
 			| expression MUL expression:e {: RESULT = (Expression)e; :}

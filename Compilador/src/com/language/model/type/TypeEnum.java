@@ -3,13 +3,14 @@ package com.language.model.type;
 public enum TypeEnum {
 	INTEGER(0), /**/
 	FLOAT(1), /**/
-	STRING(2), /**/
+	LONG(2),	
+	STRING(3), /**/
 	NULL(4), /**/
-	BOOLEAN(3), /**/
-	ARRAY(5), /**/
-	BREAK(6), /**/
-	CONTINUE(7), /**/
-	FUNCTION(8); /**/
+	BOOLEAN(5), /**/
+	ARRAY(6), /**/
+	BREAK(7), /**/
+	CONTINUE(8), /**/
+	FUNCTION(9); /**/
 
 	int value;
 

@@ -3,10 +3,10 @@ package com.language.model.type;
 import com.language.model.type.Type;
 import com.language.model.type.TypeEnum;
 
-public class TInteger extends Type{
+public class IntegerType extends Type{
     private int num;
 
-	public TInteger(int n){
+	public IntegerType(int n){
         num = n;
     }
 
@@ -25,12 +25,12 @@ public class TInteger extends Type{
     }
     
 	@Override
-	protected TypeEnum getTypeEnum() {
+	public TypeEnum getTypeEnum() {
 		return TypeEnum.INTEGER;
 	}
 
 	@Override
-	protected String getAsString() {
+	public String getAsString() {
 		return Integer.valueOf(num).toString();
 	}
 

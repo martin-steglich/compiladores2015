@@ -49,7 +49,7 @@ Identifier = [a-zA-Z][a-zA-Z0-9_]*
 
 /* enteros */
 DecIntegerLiteral = 0 | [1-9][0-9]*
-DecLongLiteral    = {DecIntegerLiteral} [lL]
+DecLongLiteral    = {DecIntegerLiteral}[lL]
 
 /*HexIntegerLiteral = 0 [xX] 0* {HexDigit} {1,8}
 HexLongLiteral    = 0 [xX] 0* {HexDigit} {1,16} [lL]
@@ -60,7 +60,7 @@ OctLongLiteral    = 0+ 1? {OctDigit} {1,21} [lL]
 OctDigit          = [0-7]*/
 
 /* flotante */
-FloatLiteral  = ({FLit1}|{FLit2}|{FLit3}) {Exponent}? [fF]
+FloatLiteral  = ({FLit1}|{FLit2}|{FLit3}) {Exponent}?[fF]
 DoubleLiteral = ({FLit1}|{FLit2}|{FLit3}) {Exponent}?
 
 FLit1    = [0-9]+ \. [0-9]* 
@@ -93,12 +93,13 @@ SIMPLE_QUOTE_TRIPLE_STRING: '''EJEMPLO'''
 	"//"					{ return new Symbol(sym.INT_DIV, yyline, yycolumn, yytext()); }
 	"%"						{ return new Symbol(sym.MOD, yyline, yycolumn, yytext()); }
 	"print"					{ return symbol(sym.PRINT); }
+	"True"					{ return symbol(sym.TRUE); }
+	"False"					{ return symbol(sym.FALSE); }
 
 	/* numeros */
 	{DecIntegerLiteral} 	{ return symbol(sym.INTEGER, yytext());}
   	{DecLongLiteral}        { return new Symbol(sym.LONG, yyline, yycolumn, yytext()); }
   	{FloatLiteral}			{ return new Symbol(sym.FLOAT, yyline, yycolumn, yytext()); }
-  	{DoubleLiteral}			{ return new Symbol(sym.DOUBLE, yyline, yycolumn, yytext()); }
   	{FloatLiteral}[jJ]		{ return new Symbol(sym.FLOAT, yyline, yycolumn, yytext()); }
   	
   	
@@ -118,14 +119,25 @@ SIMPLE_QUOTE_TRIPLE_STRING: '''EJEMPLO'''
 								string.setLength(0);
 								yybegin(SIMPLE_QUOTE_ONCE_STRING);
 							}
+	\"{3}					{ 
+								string.setLength(0);
+								yybegin(DOUBLE_QUOTE_TRIPLE_STRING);
+							}
+	\"						{ 
+								string.setLength(0);
+								yybegin(DOUBLE_QUOTE_ONCE_STRING);
+							}
+			
 	
 }
+
+
 <SIMPLE_QUOTE_TRIPLE_STRING> {
 	'{3}					{ 
 								yybegin(YYINITIAL); 
 								return new Symbol(sym.STRING, yyline, yycolumn, string.toString());
 							}
-	.						{
+	[^'{3}]					{
 								string.append(yytext());
 							}
 }
@@ -144,6 +156,41 @@ SIMPLE_QUOTE_TRIPLE_STRING: '''EJEMPLO'''
 								string.append('\r');	
 							}
 	\\\'     				{
+								string.append('\'');	
+							}
+	\\						{
+								string.append('\\');	
+							}
+	.						{
+								string.append(yytext());
+							}
+	
+	
+}
+<DOUBLE_QUOTE_TRIPLE_STRING> {
+	\"{3}					{ 
+								yybegin(YYINITIAL); 
+								return new Symbol(sym.STRING, yyline, yycolumn, string.toString());
+							}
+	[^\"{3}]					{
+								string.append(yytext());
+							}
+}
+<DOUBLE_QUOTE_ONCE_STRING> {
+	\"						{
+								yybegin(YYINITIAL);
+								return new Symbol(sym.STRING, yyline, yycolumn, string.toString());
+							}
+	\\t						{ 
+								string.append('\t');
+							}
+	\\n						{
+								string.append('\n');
+							}
+	\\r						{
+								string.append('\r');	
+							}
+	\\\"     				{
 								string.append('\"');	
 							}
 	\\						{
@@ -152,8 +199,9 @@ SIMPLE_QUOTE_TRIPLE_STRING: '''EJEMPLO'''
 	.						{
 								string.append(yytext());
 							}
+	
+	
 }
-
 
 . 							{ 
 								throw new ParsingException(yyline, yycolumn, "No se reconoce lexicograficamente el caracter: " + yytext());
