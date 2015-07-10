@@ -2,6 +2,7 @@ package com.language.parser;
 
 import java.util.*;
 import java_cup.runtime.*;
+import java.util.Stack;
 import com.language.exceptions.*;
 import com.language.model.expression.*;
 
@@ -13,6 +14,13 @@ import com.language.model.expression.*;
 %column
 
 %class Scanner
+
+%init{
+        this.stack.push(0);
+        current_indent = 0;
+        yybegin(INDENT_STATE);
+%init}
+
 %{
 	private SymbolFactory sf;
 	private StringBuffer string = new StringBuffer();
@@ -30,48 +38,33 @@ import com.language.model.expression.*;
 	private Symbol symbol(int type, Object value) {
 		return new Symbol(type, yyline, yycolumn, value);
 	}
+	
+	private static final int TAB_LENGTH = 4;
+	
+	Stack<Integer> stack = new Stack<Integer>();
+   	private int current_indent;
 %}
 
 %eofval{
     return symbol(sym.EOF);
 %eofval}
 
-LineTerminator = \r|\n|\r\n
-InputCharacter = [^\r\n]
-
-WhiteSpace = {LineTerminator} | [ \t\f]+
-
-/* comentarios */
-Comment = "#" {InputCharacter}* {LineTerminator}?
-
-/* identificadores */
-Identifier = [a-zA-Z][a-zA-Z0-9_]*
-
-/* enteros */
-DecIntegerLiteral = 0 | [1-9][0-9]*
-DecLongLiteral    = {DecIntegerLiteral}[lL]
-
-
-/*HexIntegerLiteral = 0 [xX] 0* {HexDigit} {1,8}
-HexLongLiteral    = 0 [xX] 0* {HexDigit} {1,16} [lL]
-HexDigit          = [0-9a-fA-F]
-
-OctIntegerLiteral = 0+ [1-3]? {OctDigit} {1,15}
-OctLongLiteral    = 0+ 1? {OctDigit} {1,21} [lL]
-OctDigit          = [0-7]*/
-
-/* flotante */
-FloatLiteral  = ({FLit1}|{FLit2}|{FLit3}) {Exponent}?[fF]
-DoubleLiteral = ({FLit1}|{FLit2}|{FLit3}) {Exponent}?
-
-FLit1    = [0-9]+ \. [0-9]* 
-FLit2    = \. [0-9]+ 
-FLit3    = [0-9]+ 
-Exponent = [eE] [+-]? [0-9]+
-
-/* string */
-DoubleStringCharacter = [^\r\n\"\\]
-SimpleStringCharacter = [^\r\n\'\\]
+LineTerminator  		= \r|\n|\r\n
+WhiteSpace      		= [ \t\f]
+digit                   = [0-9]
+integer                 = {digit}+
+long 					= {integer}[L]
+float                   = {pointfloat} | {exponentfloat}
+pointfloat      		= {intpart}? {fraction} | {intpart} "."
+exponentfloat   		= ( {intpart} | {pointfloat} ) {exponent}
+intpart                 = {integer}
+fraction                = "." {integer}
+exponent                = ( "e" | "E" ) [ "+" | "-" ] {integer}
+letter                  = {lowercase} | {uppercase}
+lowercase               = [a-z]
+uppercase               = [A-Z]
+identifier              = ({letter}|"_") ({letter} | {digit} | "_")*
+comment                 = #[^\n]*
 
 /* definicion de estados */
 /*
@@ -80,11 +73,59 @@ SIMPLE_QUOTE_ONCE_STRING: 'ES'
 DOUBLE_QUOTE_TRIPLE_STRING: """UN"""
 SIMPLE_QUOTE_TRIPLE_STRING: '''EJEMPLO'''
 */
-%state DOUBLE_QUOTE_ONCE_STRING, SIMPLE_QUOTE_ONCE_STRING, DOUBLE_QUOTE_TRIPLE_STRING, SIMPLE_QUOTE_TRIPLE_STRING
+%state INDENT_STATE
+%state NORMAL_STATE
+%state DOUBLE_QUOTE_ONCE_STRING
+%state SIMPLE_QUOTE_ONCE_STRING
+%state DOUBLE_QUOTE_TRIPLE_STRING
+%state SIMPLE_QUOTE_TRIPLE_STRING
 
 %%
 
-<YYINITIAL> {
+<INDENT_STATE> {
+
+	" "                         {       
+									current_indent++;
+								}
+	"\t"                        {       
+									current_indent = current_indent + TAB_LENGTH;
+								}
+	"\f"                        {   
+									/*Ignore whitespace*/
+								}
+	.                         	{       
+									yypushback(1);
+                                 	if (current_indent > stack.peek()){
+                                    	stack.push(current_indent);
+                                      	yybegin(NORMAL_STATE);
+                                     	return symbol(sym.START_BLOCK);
+                                     }
+                                     else if (current_indent == stack.peek()){
+                                      	yybegin(NORMAL_STATE);
+                                     }
+                                     else{
+                                     	int tmp = stack.pop();
+                                      	return symbol(sym.END_BLOCK);
+                                     }
+                            	}
+	{LineTerminator}        	{
+									if (current_indent > stack.peek()){
+                                    	stack.push(current_indent);
+                                       	yybegin(NORMAL_STATE);
+                                      	return symbol(sym.START_BLOCK);
+                                  	}
+                                    else if (current_indent == stack.peek()){
+                                      	yybegin(NORMAL_STATE);
+                                    }
+                                    else{
+                                     	yypushback(1);
+                                      	int tmp = stack.pop();
+                                      	return symbol(sym.END_BLOCK);
+                                    }
+                             	}
+}
+
+<NORMAL_STATE> {
   	"="             		{ return new Symbol(sym.ASSIGN, yyline, yycolumn, "="); }
   	"+"						{ return new Symbol(sym.PLUS, yyline, yycolumn, yytext()); }
 	"-"						{ return new Symbol(sym.MINUS, yyline, yycolumn, yytext()); }
@@ -111,20 +152,26 @@ SIMPLE_QUOTE_TRIPLE_STRING: '''EJEMPLO'''
 	"print"					{ return symbol(sym.PRINT); }
 	"True"					{ return symbol(sym.TRUE); }
 	"False"					{ return symbol(sym.FALSE); }
+	"if"					{ return symbol(sym.IF); }
+	"else"					{ return symbol(sym.ELSE); }
+	":"						{ return symbol(sym.COLON); }
+	"def"					{ return symbol(sym.DEF); }
+	"("						{ return symbol(sym.LEFTPARENTHESE); }  
+	")"						{ return symbol(sym.RIGHTPARENTHESE); } 
+	";" 					{ return symbol(sym.SEMICOLON); } 
+	","						{ return symbol(sym.COMMA); }
 
 	/* numeros */
-	{DecIntegerLiteral} 	{ return symbol(sym.INTEGER, yytext());}
-  	{DecLongLiteral}        { return new Symbol(sym.LONG, yyline, yycolumn, yytext()); }
-  	{FloatLiteral}			{ return new Symbol(sym.FLOAT, yyline, yycolumn, yytext()); }
-  	{FloatLiteral}[jJ]		{ return new Symbol(sym.FLOAT, yyline, yycolumn, yytext()); }
-  	
+	{integer} 				{ return symbol(sym.INTEGER, yytext());}
+  	{long}        			{ return new Symbol(sym.LONG, yyline, yycolumn, yytext()); }
+  	{float}					{ return new Symbol(sym.FLOAT, yyline, yycolumn, yytext()); }
   	
   	/* comentarios */
-  	{Comment}				{ /* ignore */ }
+  	{comment}				{ /* ignore */ }
   	/* espacios */
 	{WhiteSpace}			{ /* ignore */ }
 	/* identificadores */
-	{Identifier}			{ return new Symbol(sym.ID, yyline, yycolumn, yytext()); }
+	{identifier}			{ return new Symbol(sym.ID, yyline, yycolumn, yytext()); }
 	
 	/* string */
 	'{3}					{ 
@@ -143,23 +190,27 @@ SIMPLE_QUOTE_TRIPLE_STRING: '''EJEMPLO'''
 								string.setLength(0);
 								yybegin(DOUBLE_QUOTE_ONCE_STRING);
 							}
-			
-	
+							
+	{LineTerminator}        {       
+								yybegin(INDENT_STATE);
+                                current_indent = 0;
+                                return symbol(sym.NEWLINE);
+                            }
 }
-
 
 <SIMPLE_QUOTE_TRIPLE_STRING> {
 	'{3}					{ 
-								yybegin(YYINITIAL); 
+								yybegin(NORMAL_STATE); 
 								return new Symbol(sym.STRING, yyline, yycolumn, string.toString());
 							}
 	[^'{3}]					{
 								string.append(yytext());
 							}
 }
+
 <SIMPLE_QUOTE_ONCE_STRING> {
 	'						{
-								yybegin(YYINITIAL);
+								yybegin(NORMAL_STATE);
 								return new Symbol(sym.STRING, yyline, yycolumn, string.toString());
 							}
 	\\t						{ 
@@ -180,21 +231,21 @@ SIMPLE_QUOTE_TRIPLE_STRING: '''EJEMPLO'''
 	.						{
 								string.append(yytext());
 							}
-	
-	
 }
+
 <DOUBLE_QUOTE_TRIPLE_STRING> {
 	\"{3}					{ 
-								yybegin(YYINITIAL); 
+								yybegin(NORMAL_STATE); 
 								return new Symbol(sym.STRING, yyline, yycolumn, string.toString());
 							}
 	[^\"{3}]					{
 								string.append(yytext());
 							}
 }
+
 <DOUBLE_QUOTE_ONCE_STRING> {
 	\"						{
-								yybegin(YYINITIAL);
+								yybegin(NORMAL_STATE);
 								return new Symbol(sym.STRING, yyline, yycolumn, string.toString());
 							}
 	\\t						{ 
@@ -214,9 +265,7 @@ SIMPLE_QUOTE_TRIPLE_STRING: '''EJEMPLO'''
 							}
 	.						{
 								string.append(yytext());
-							}
-	
-	
+							}	
 }
 
 . 							{ 

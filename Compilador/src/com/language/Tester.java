@@ -8,7 +8,7 @@ public class Tester {
 
 	public static void main(String[] args) {
 		
-		String exptext = "print 3";
+		String exptext = "print 3 + 2";
 		
 		Program program = ProgramParser.parse(exptext);
 		

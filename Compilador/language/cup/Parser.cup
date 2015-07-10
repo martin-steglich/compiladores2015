@@ -20,10 +20,21 @@ terminal String AND, OR, NOT, EQUALS, NOT_EQUALS, LESS_THAN, GREAT_THAN, LESSEQU
 
 terminal String PRINT;
 
+terminal String NEWLINE;
+
+terminal String START_BLOCK, END_BLOCK;
+
+terminal String IF, ELSE, DEF;
+
+terminal String LEFTPARENTHESE, RIGHTPARENTHESE;
+
+terminal String COLON, SEMICOLON, COMMA;
+
 non terminal program, module;
+non terminal statement_newline_list, simple_statement_list, simple_statement, compound_statement;
+non terminal stmt_list, simple_stmt_semicolon_list, statement, statement_list, identifier_comma_list;
 non terminal Expression expression;
 non terminal block;
-non terminal simple_statement, simple_statement_list;
 
 precedence left PLUS, MINUS;
 precedence left MUL, DIV, EXP, INT_DIV, MOD;
@@ -36,9 +47,25 @@ program	::=	module:list {:
 						:};
 						
 module ::= simple_statement:stmt simple_statement_list:list {:
- 																((List<Statement>)list).add((Statement)stmt);
+						 										((List<Statement>)list).add((Statement)stmt);
 																RESULT = list;
-															:};
+															:}
+		   | statement_newline_list:list {: 
+		   									RESULT = list; 
+		   								 :};
+		   								 
+statement_newline_list ::=	NEWLINE statement_newline_list:list {:
+																	RESULT = list; 
+																:} 
+							| statement:stmt statement_newline_list:list {:
+																			((List<Statement>)list).addAll((List<Statement>)stmt);
+																			RESULT = list;
+																		 :}
+							| 			
+							/*epsilon*/							
+							{: 
+								RESULT = new LinkedList<Statement>(); 
+							:}; 
 															
 simple_statement_list ::= simple_statement:stmt simple_statement_list:list {: 	
 																				((List<Statement>)list).add((Statement)stmt);
@@ -50,8 +77,6 @@ simple_statement_list ::= simple_statement:stmt simple_statement_list:list {:
 						  	RESULT = new LinkedList<Statement>(); 
 						  :};
 						  
-
-
 simple_statement ::= expression:e {: RESULT = e; :} 
 					 | ID:i ASSIGN expression:e {: RESULT = new AssignStatement(i, (Expression)e); :}
 					 | PRINT:p expression:e {: RESULT = new PrintStatement((Expression) e); :};
@@ -86,6 +111,51 @@ expression ::= INTEGER:i {: RESULT = new IntegerExpression(Integer.valueOf(i)); 
 			| NOT_BIT expression:e {: RESULT = (Expression)e; :}
 			| NOT expression:e {: RESULT = (Expression)e; :};			
 
-
-
-
+compound_statement ::= IF expression COLON block ELSE COLON block
+					   | IF expression COLON block
+					   | DEF ID LEFTPARENTHESE RIGHTPARENTHESE COLON block
+					   | DEF ID LEFTPARENTHESE ID identifier_comma_list RIGHTPARENTHESE COLON block;
+					   
+stmt_list ::= simple_statement:stmt simple_stmt_semicolon_list:list {: 
+																		((List<Statement>)list).add((Statement)stmt); 
+																		RESULT = list;
+																	:};
+																	
+simple_stmt_semicolon_list ::= SEMICOLON simple_statement:stmt simple_stmt_semicolon_list:list {: 
+																									((List<Statement>)list).add((Statement)stmt); 
+																									RESULT = list;
+																							   :}
+							   | 
+							   /*epsilon*/											
+							   {:
+							    	RESULT = new LinkedList<Statement>(); 
+							   :};
+							   
+statement ::= stmt_list:list NEWLINE {: 
+										RESULT = list;
+									 :}
+			  | compound_statement:stmt {: 
+											List<Statement> list = new LinkedList<Statement>();
+											list.add((Statement)stmt);
+											RESULT = list;
+										:};
+										
+block ::= stmt_list:list NEWLINE {:
+ 									RESULT = (List<Statement>)list;
+ 								 :}
+		  | NEWLINE START_BLOCK statement_list:list END_BLOCK {:
+		  	 													RESULT = (List<Statement>)list;	
+		  	 										  		  :};
+		  	 										  
+statement_list ::= statement_list:list statement:stmt {:
+														((List<Statement>)list).addAll((List<Statement>)stmt);
+														RESULT = list;
+													  :}
+				   | statement : stmt {:
+										List<Statement> list = new LinkedList<Statement>();
+										list.addAll((List<Statement>)stmt);
+										RESULT = list;
+									  :};
+									  
+identifier_comma_list ::= COMMA ID identifier_comma_list
+						  | /*epsilon*/;
