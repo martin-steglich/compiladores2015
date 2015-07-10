@@ -7,17 +7,9 @@ import com.language.parser.ProgramParser;
 public class Tester {
 
 	public static void main(String[] args) {
-		
-		String exptext = "print 3 + 2";
-		
-		Program program = ProgramParser.parse(exptext);
-		
-		try {
-			program.execute();
-		} catch (CompilerException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		ProgramParser.parse("Simple.py");
+		ProgramParser.parse("Simple2.py");
+
 
 		
 	}
