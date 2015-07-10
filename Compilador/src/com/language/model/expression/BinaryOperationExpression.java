@@ -729,6 +729,106 @@ public class BinaryOperationExpression extends Expression {
 			    else {
                     throw new CompilerException(lineNumber, "Tipos de datos no esperados para la operacion division");
 			    }
+			} else if (op.equals("**")) { // EXPONENTE
+				if(intInt){
+					int intIzq = ((IntegerType)izq).getValue();
+					int intDer = ((IntegerType)der).getValue();
+					int resultado = (int)Math.pow(intIzq, intDer);
+					res = new IntegerType(resultado);
+				}
+				else if(intLong){
+					int intIzq = ((IntegerType)izq).getValue();
+					long longDer = ((LongType)der).getValue();
+					long resultado = (long)Math.pow(intIzq, longDer);
+					res = new LongType(resultado);
+				}
+				else if(intFloat){
+					int intIzq = ((IntegerType)izq).getValue();
+					float floatDer = ((FloatType)der).getValue();
+					float resultado = (float)Math.pow(intIzq, floatDer);
+					res = new FloatType(resultado);
+				}
+				else if(intBoolean){
+					int intIzq = ((IntegerType)izq).getValue();
+					int booleanDer = ((BooleanType)der).getEquivalentInt();
+					int resultado = (int)Math.pow(intIzq, booleanDer);
+					res = new IntegerType(resultado);
+				}
+				else if(longInt){
+					int intDer = ((IntegerType)der).getValue();
+					long longIzq = ((LongType)izq).getValue();
+					long resultado = (long)Math.pow(longIzq, intDer);
+					res = new LongType(resultado);
+				}
+				else if(longLong){
+					long longDer = ((LongType)der).getValue();
+					long longIzq = ((LongType)izq).getValue();
+					long resultado = (long)Math.pow(longIzq, longDer);
+					res = new LongType(resultado);
+				}
+				else if(longFloat){
+					float floatDer = ((FloatType)der).getValue();
+					long longIzq = ((LongType)izq).getValue();
+					float resultado = (float)Math.pow(longIzq, floatDer);
+					res = new FloatType(resultado);
+				}
+				else if(longBoolean){
+					long longIzq = ((LongType)izq).getValue();
+					int booleanDer = ((BooleanType)der).getEquivalentInt();
+					long resultado = (long)Math.pow(longIzq, booleanDer);
+					res = new LongType(resultado);
+				}
+				else if(floatInt){
+					int intDer = ((IntegerType)der).getValue();
+					float floatIzq = ((FloatType)izq).getValue();
+					float resultado = (float)Math.pow(floatIzq, intDer);
+					res = new FloatType(resultado);
+				}
+				else if(floatLong){
+					long longDer = ((LongType)der).getValue();
+					float floatIzq = ((FloatType)izq).getValue();
+					float resultado = (float)Math.pow(floatIzq, longDer);
+					res = new FloatType(resultado);
+				}
+				else if(floatFloat){
+					float floatDer = ((FloatType)der).getValue();
+					float floatIzq = ((FloatType)izq).getValue();
+					float resultado = (float)Math.pow(floatIzq, floatDer);
+					res = new FloatType(resultado);
+				}
+				else if(floatBoolean){
+					int booleanDer = ((BooleanType)der).getEquivalentInt();
+					float floatIzq = ((FloatType)izq).getValue();
+					float resultado = (float)Math.pow(floatIzq, booleanDer);
+					res = new FloatType(resultado);
+				}
+				else if(booleanInt){
+					int booleanIzq = ((BooleanType)izq).getEquivalentInt();
+					int intDer = ((IntegerType)der).getValue();
+					int resultado = (int)Math.pow(booleanIzq, intDer);
+					res = new IntegerType(resultado);
+				}
+				else if(booleanLong){
+					int booleanIzq = ((BooleanType)izq).getEquivalentInt();
+					long longDer = ((LongType)der).getValue();
+					long resultado = (long)Math.pow(booleanIzq, longDer);
+					res = new LongType(resultado);
+				}
+				else if(booleanFloat){
+					int booleanIzq = ((BooleanType)izq).getEquivalentInt();
+					float floatDer = ((FloatType)der).getValue();
+					int resultado = (int)Math.pow(booleanIzq, floatDer);
+					res = new FloatType(resultado);
+				}
+				else if(booleanBoolean){
+					int booleanIzq = ((BooleanType)izq).getEquivalentInt();
+					int booleanDer = ((BooleanType)der).getEquivalentInt();
+					int resultado = (int)Math.pow(booleanIzq, booleanDer);
+					res = new IntegerType(resultado);
+				}
+			    else {
+                    throw new CompilerException(lineNumber, "Tipos de datos no esperados para la operacion division");
+			    }
 			} else if (op.equals("and")) { // AND
 				if(intInt){
 					int intDer = ((IntegerType)der).getValue();
