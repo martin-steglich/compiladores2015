@@ -22,6 +22,13 @@ import com.language.model.expression.*;
 %init}
 
 %eofval{
+		if(stack.size() > 1){
+			yypushback(yylength());
+          	int tmp = stack.pop();
+          	System.out.println("END_BLOCK");
+          	return symbol(sym.END_BLOCK);
+		}
+		
 		return symbol(sym.EOF);
 %eofval}
 

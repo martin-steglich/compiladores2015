@@ -1,6 +1,2 @@
-a = 4+85L
-if (a < 80):
-	type (a)
-else:
-	print a
-
+print 3
+	print 4

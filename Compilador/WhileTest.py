@@ -1,5 +1,4 @@
-a = 1
-while a < 10:
-	print a
-	a = a + 1
-
+if 2 < 10:
+	print 2
+	if 3 < 10:
+		print 3

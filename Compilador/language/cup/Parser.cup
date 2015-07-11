@@ -30,12 +30,15 @@ terminal String LEFTPARENTHESE, RIGHTPARENTHESE;
 
 terminal String COLON, SEMICOLON, COMMA;
 
+
 non terminal program, module;
 non terminal statement_newline_list, simple_statement_list, simple_statement, compound_statement;
 non terminal stmt_list, simple_stmt_semicolon_list, statement, statement_list, identifier_comma_list;
 non terminal Expression expression;
 non terminal block;
 
+precedence left IF, ELSE;
+precedence left ASSIGN;
 precedence left PLUS, MINUS;
 precedence left MUL, DIV, EXP, INT_DIV, MOD;
 precedence left AND, OR, EQUALS, NOT_EQUALS, LESS_THAN, GREAT_THAN, LESSEQUAL_THAN, GREATEQUAL_THAN;
@@ -57,7 +60,7 @@ module ::= simple_statement:stmt simple_statement_list:list {:
 statement_newline_list ::=	NEWLINE statement_newline_list:list {:
 																	RESULT = list; 
 																:} 
-							| statement:stmt statement_newline_list:list {:
+							| statement:stmt statement_newline_list:list {: 
 																			((List<Statement>)list).addAll((List<Statement>)stmt);
 																			RESULT = list;
 																		 :}
