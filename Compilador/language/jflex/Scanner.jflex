@@ -18,6 +18,7 @@ import com.language.model.expression.*;
 %init{
         this.stack.push(0);
         current_indent = 0;
+        colon = false;
         yybegin(INDENT_STATE);
 %init}
 
@@ -54,6 +55,7 @@ import com.language.model.expression.*;
 	
 	Stack<Integer> stack = new Stack<Integer>();
    	private int current_indent;
+   	private boolean colon;
 %}
 
 LineTerminator  		= \r|\n|\r\n
@@ -81,6 +83,7 @@ DOUBLE_QUOTE_TRIPLE_STRING: """UN"""
 SIMPLE_QUOTE_TRIPLE_STRING: '''EJEMPLO'''
 */
 %state INDENT_STATE
+%state BLOCK_STATE
 %state NORMAL_STATE
 %state DOUBLE_QUOTE_ONCE_STRING
 %state SIMPLE_QUOTE_ONCE_STRING
@@ -88,7 +91,6 @@ SIMPLE_QUOTE_TRIPLE_STRING: '''EJEMPLO'''
 %state SIMPLE_QUOTE_TRIPLE_STRING
 
 %%
-
 <INDENT_STATE> {
 	" "                        {
                                  	System.out.println("SPACE");
@@ -102,6 +104,54 @@ SIMPLE_QUOTE_TRIPLE_STRING: '''EJEMPLO'''
 									/*Ignore whitespace*/
 								}
 	.                         	{       
+									
+                                 	if (current_indent > stack.peek()){
+                                 		throw new ParsingException(yyline, yycolumn, "Error lexicografico: Indentacion incorrecta." );
+                                     }
+                                     else if (current_indent == stack.peek()){
+                                     	yypushback(1);
+                                      	yybegin(NORMAL_STATE);
+                                     }
+                                     else{
+                                     	System.out.println("END_BLOCK");
+                                     	yypushback(1);
+                                      	int tmp = stack.pop();
+                                      	return symbol(sym.END_BLOCK);
+                                     }
+                            	}
+	{LineTerminator}        	{
+									if (current_indent > stack.peek()){
+                                 		System.out.println("START_BLOCK");
+                                    	stack.push(current_indent);
+                                       	yybegin(NORMAL_STATE);
+                                      	return symbol(sym.START_BLOCK);
+                                  	}
+                                    else if (current_indent == stack.peek()){
+                                      	yybegin(NORMAL_STATE);
+                                    }
+                                    else{
+                                     	System.out.println("END_BLOCK");
+                                     	yypushback(1);
+                                      	int tmp = stack.pop();
+                                      	return symbol(sym.END_BLOCK);
+                                    }
+                             	}
+}
+
+<BLOCK_STATE> {
+	" "                        {
+                                 	System.out.println("SPACE");
+									current_indent = current_indent + 1;
+								}
+	"\t"                        {
+                                 	System.out.println("TAB");
+									current_indent = current_indent + TAB_LENGTH;
+								}
+	"\f"                        {   
+									/*Ignore whitespace*/
+								}
+	.                         	{       
+									
 									yypushback(1);
                                  	if (current_indent > stack.peek()){
                                  		System.out.println("START_BLOCK");
@@ -331,6 +381,18 @@ SIMPLE_QUOTE_TRIPLE_STRING: '''EJEMPLO'''
                                 current_indent = 0;
                                 return symbol(sym.NEWLINE);
                             }
+	":"{WhiteSpace}*{LineTerminator}        {   if(!colon){
+													colon = true;
+													System.out.println("COLON");
+													yypushback(yylength());
+													return symbol(sym.COLON);
+												}
+					    						colon = false;
+				                                System.out.println("NEWLINE");
+												yybegin(BLOCK_STATE);
+				                                current_indent = 0;
+				                                return symbol(sym.NEWLINE);
+				                            }
 }
 
 <SIMPLE_QUOTE_TRIPLE_STRING> {
