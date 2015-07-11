@@ -150,6 +150,7 @@ SIMPLE_QUOTE_TRIPLE_STRING: '''EJEMPLO'''
 	"<="					{ return symbol(sym.LESSEQUAL_THAN); }
 	">="					{ return symbol(sym.GREATEQUAL_THAN); }
 	"print"					{ return symbol(sym.PRINT); }
+	"type"					{ return symbol(sym.TYPE);	}
 	"True"					{ return symbol(sym.TRUE); }
 	"False"					{ return symbol(sym.FALSE); }
 	"if"					{ return symbol(sym.IF); }

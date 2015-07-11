@@ -1,1 +1,1 @@
-print False & True
+type (2+3.0)

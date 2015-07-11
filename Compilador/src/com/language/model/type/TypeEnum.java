@@ -21,5 +21,32 @@ public enum TypeEnum {
 	public int getValue() {
 		return value;
 	}
+	
+	@Override
+	public String toString(){
+		String name = "";
+		switch(ordinal()){
+		case 0: 
+			name = "int"; 
+			break;
+		case 1:
+			name = "float";
+			break;
+		case 2:
+			name = "long";
+			break; 
+		case 3:
+			name = "str";
+			break;
+		case 4:
+			name = "null";
+			break;
+		case 5:
+			name = "bool";
+			break;
+		}
+		
+		return name;
+	}
 
 }

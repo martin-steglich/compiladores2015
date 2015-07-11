@@ -7,7 +7,7 @@ import com.language.parser.ProgramParser;
 public class Tester {
 
 	public static void main(String[] args) {
-		ProgramParser.parse("Simple.py");
+		//ProgramParser.parse("Simple.py");
 		ProgramParser.parse("Simple2.py");
 
 

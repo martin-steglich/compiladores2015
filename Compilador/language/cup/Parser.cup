@@ -18,7 +18,7 @@ terminal String AND_BIT, OR_BIT, XOR_BIT, NOT_BIT, LSHIFT_BIT, RSHIFT_BIT;
 
 terminal String AND, OR, NOT, EQUALS, NOT_EQUALS, LESS_THAN, GREAT_THAN, LESSEQUAL_THAN, GREATEQUAL_THAN;
 
-terminal String PRINT;
+terminal String PRINT, TYPE;
 
 terminal String NEWLINE;
 
@@ -79,7 +79,9 @@ simple_statement_list ::= simple_statement:stmt simple_statement_list:list {:
 						  
 simple_statement ::= expression:e {: RESULT = e; :} 
 					 | ID:i ASSIGN expression:e {: RESULT = new AssignStatement(i, (Expression)e); :}
-					 | PRINT:p expression:e {: RESULT = new PrintStatement((Expression) e); :};
+					 | PRINT:p expression:e {: RESULT = new PrintStatement((Expression) e); :}
+					 | PRINT:p LEFTPARENTHESE expression:e RIGHTPARENTHESE {: RESULT = new PrintStatement((Expression) e); :}
+					 | TYPE:t LEFTPARENTHESE expression:e RIGHTPARENTHESE {: RESULT = new TypeStatement((Expression) e);	:};
 
 expression ::= INTEGER:i {: RESULT = new IntegerExpression(Integer.valueOf(i)); :}
 			| STRING:s {: RESULT = new StringExpression(s); :}

@@ -23,7 +23,7 @@ public class LongType extends Type{
     
 	@Override
 	public TypeEnum getTypeEnum() {
-		return TypeEnum.INTEGER;
+		return TypeEnum.LONG;
 	}
 
 	@Override
