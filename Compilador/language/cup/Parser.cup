@@ -80,7 +80,6 @@ simple_statement_list ::= simple_statement:stmt simple_statement_list:list {:
 simple_statement ::= expression:e {: RESULT = e; :} 
 					 | ID:i ASSIGN expression:e {: RESULT = new AssignStatement(i, (Expression)e); :}
 					 | PRINT:p expression:e {: RESULT = new PrintStatement((Expression) e); :}
-					 | PRINT:p LEFTPARENTHESE expression:e RIGHTPARENTHESE {: RESULT = new PrintStatement((Expression) e); :}
 					 | TYPE:t LEFTPARENTHESE expression:e RIGHTPARENTHESE {: RESULT = new TypeStatement((Expression) e);	:};
 
 expression ::= INTEGER:i {: RESULT = new IntegerExpression(Integer.valueOf(i)); :}
@@ -111,7 +110,8 @@ expression ::= INTEGER:i {: RESULT = new IntegerExpression(Integer.valueOf(i)); 
 			| expression:l RSHIFT_BIT expression:r {: RESULT = new BinaryOperationExpression((Expression)l, ">>", (Expression)r) ;:}
 			| MINUS expression:e {: RESULT = new UnaryOperationExpression("-", (Expression)e); :}
 			| NOT_BIT expression:e {: RESULT = new UnaryOperationExpression("~", (Expression)e); :}
-			| NOT expression:e {: RESULT = new UnaryOperationExpression("not", (Expression)e); :};			
+			| NOT expression:e {: RESULT = new UnaryOperationExpression("not", (Expression)e); :};
+			| LEFTPARENTHESE expression:e RIGHTPARENTHESE {: RESULT = e; :}			
 
 compound_statement ::= IF expression COLON block ELSE COLON block
 					   | IF expression COLON block
