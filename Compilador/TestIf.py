@@ -1,4 +1,2 @@
-fav = "mostrar_saludo"
-
-if fav == "mostrar_saludo":
-    print "Hola que tal"
+if 3 > 2:
+    print 3
