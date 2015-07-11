@@ -28,7 +28,7 @@ public class BinaryOperationExpression extends Expression {
 	}
 
 	public String getType(){
-		return "Type EBinaryOperation";
+		return "Type BinaryOperationExpression";
 	}
 
 	public String Convert (float number){

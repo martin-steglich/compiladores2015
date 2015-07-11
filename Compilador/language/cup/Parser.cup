@@ -107,9 +107,9 @@ expression ::= INTEGER:i {: RESULT = new IntegerExpression(Integer.valueOf(i)); 
 			| expression:l XOR_BIT expression:r {: RESULT = new BinaryOperationExpression((Expression)l, "^", (Expression)r) ;:}
 			| expression:l LSHIFT_BIT expression:r {: RESULT = new BinaryOperationExpression((Expression)l, "<<", (Expression)r) ;:}
 			| expression:l RSHIFT_BIT expression:r {: RESULT = new BinaryOperationExpression((Expression)l, ">>", (Expression)r) ;:}
-			| MINUS expression:e {: RESULT = (Expression)e; :}
-			| NOT_BIT expression:e {: RESULT = (Expression)e; :}
-			| NOT expression:e {: RESULT = (Expression)e; :};			
+			| MINUS expression:e {: RESULT = new UnaryOperationExpression("-", (Expression)e); :}
+			| NOT_BIT expression:e {: RESULT = new UnaryOperationExpression("~", (Expression)e); :}
+			| NOT expression:e {: RESULT = new UnaryOperationExpression("not", (Expression)e); :};			
 
 compound_statement ::= IF expression COLON block ELSE COLON block
 					   | IF expression COLON block
