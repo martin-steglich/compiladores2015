@@ -10,12 +10,14 @@ import com.language.model.type.Type;
 public class IfStatement extends Statement{
 	
 	List<Statement> blockIf;
+	List<Statement> blockElse;
 	Expression condition;
 	int lineNumber;
 	
-	public IfStatement(Expression condition, List<Statement> block) {
+	public IfStatement(Expression condition, List<Statement> blockIf, List<Statement> blockElse) {
 		this.condition = condition;
-		this.blockIf = block;
+		this.blockIf = blockIf;
+		this.blockElse = blockElse;
 		
 	}
 
@@ -23,6 +25,10 @@ public class IfStatement extends Statement{
 		BooleanType cond = (BooleanType)condition.evaluate();
 		if(cond.getValue()){
 			for(Statement st : blockIf){
+				st.execute();
+			}
+		}else if(blockElse != null){
+			for(Statement st: blockElse){
 				st.execute();
 			}
 		}

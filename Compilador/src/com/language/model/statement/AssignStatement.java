@@ -22,9 +22,9 @@ public class AssignStatement extends Statement{
 		//Stack stack = s.getStack();
 		s.addVariable(id, var);
 		
-		String aux = s.findVariable(id).getAsString();
-		
-		System.out.println(aux);
+//		String aux = s.findVariable(id).getAsString();
+//		
+//		System.out.println(aux);
 	}
 
 }

@@ -88,7 +88,7 @@ expression ::= INTEGER:i {: RESULT = new IntegerExpression(Integer.valueOf(i)); 
 			| FLOAT:f {: RESULT = new FloatExpression(Float.valueOf(f)); :}
 			| TRUE:b {: RESULT = new BooleanExpression(true); :}
 			| FALSE:b {: RESULT = new BooleanExpression(false); :}
-			| ID:i {: RESULT = new IdentifierExpression(id); :}
+			| ID:i {: RESULT = new IdentifierExpression(i); :}
 			| expression:l PLUS expression:r {: RESULT = new BinaryOperationExpression((Expression)l, "+", (Expression)r) ;:}
 			| expression:l MINUS expression:r {: RESULT = new BinaryOperationExpression((Expression)l, "-", (Expression)r) ;:}
 			| expression:l DIV expression:r {: RESULT = new BinaryOperationExpression((Expression)l, "/", (Expression)r) ;:}
@@ -114,8 +114,8 @@ expression ::= INTEGER:i {: RESULT = new IntegerExpression(Integer.valueOf(i)); 
 			| NOT expression:e {: RESULT = new UnaryOperationExpression("not", (Expression)e); :}
 			| LEFTPARENTHESE expression:e RIGHTPARENTHESE {: RESULT = e; :};			
 
-compound_statement ::= IF expression COLON block ELSE COLON block:b 
-					   | IF expression:e COLON block:b {: RESULT = new IfStatement(e, (List<Statement>) b); :}
+compound_statement ::= IF expression:e COLON block:i ELSE COLON block:b {: RESULT = new IfStatement(e, (List<Statement>) i,(List<Statement>) b ); :}
+					   | IF expression:e COLON block:b {: RESULT = new IfStatement(e, (List<Statement>) b, null); :}
 					   | DEF ID LEFTPARENTHESE RIGHTPARENTHESE COLON block
 					   | DEF ID LEFTPARENTHESE ID identifier_comma_list RIGHTPARENTHESE COLON block;
 					   
