@@ -84,7 +84,7 @@ simple_statement ::= expression:e {: RESULT = e; :}
 
 expression ::= INTEGER:i {: RESULT = new IntegerExpression(Integer.valueOf(i)); :}
 			| STRING:s {: RESULT = new StringExpression(s); :}
-			| LONG:l {: RESULT = new LongExpression(Long.valueOf(l)); :}
+			| LONG:l {: RESULT = new LongExpression(l); :}
 			| FLOAT:f {: RESULT = new FloatExpression(Float.valueOf(f)); :}
 			| TRUE:b {: RESULT = new BooleanExpression(true); :}
 			| FALSE:b {: RESULT = new BooleanExpression(false); :}
