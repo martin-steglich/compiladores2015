@@ -5,7 +5,7 @@ public enum TypeEnum {
 	FLOAT(1), /**/
 	LONG(2),	
 	STRING(3), /**/
-	NULL(4), /**/
+	NONE(4), /**/
 	BOOLEAN(5), /**/
 	ARRAY(6), /**/
 	BREAK(7), /**/

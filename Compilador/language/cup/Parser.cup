@@ -88,6 +88,7 @@ expression ::= INTEGER:i {: RESULT = new IntegerExpression(Integer.valueOf(i)); 
 			| FLOAT:f {: RESULT = new FloatExpression(Float.valueOf(f)); :}
 			| TRUE:b {: RESULT = new BooleanExpression(true); :}
 			| FALSE:b {: RESULT = new BooleanExpression(false); :}
+			| ID:i {: RESULT = new IdentifierExpression(id); :}
 			| expression:l PLUS expression:r {: RESULT = new BinaryOperationExpression((Expression)l, "+", (Expression)r) ;:}
 			| expression:l MINUS expression:r {: RESULT = new BinaryOperationExpression((Expression)l, "-", (Expression)r) ;:}
 			| expression:l DIV expression:r {: RESULT = new BinaryOperationExpression((Expression)l, "/", (Expression)r) ;:}
@@ -113,13 +114,12 @@ expression ::= INTEGER:i {: RESULT = new IntegerExpression(Integer.valueOf(i)); 
 			| NOT expression:e {: RESULT = new UnaryOperationExpression("not", (Expression)e); :}
 			| LEFTPARENTHESE expression:e RIGHTPARENTHESE {: RESULT = e; :};			
 
-compound_statement ::= IF expression COLON block ELSE COLON block
-					   | IF expression COLON block
+compound_statement ::= IF expression COLON block ELSE COLON block:b 
+					   | IF expression:e COLON block:b {: RESULT = new IfStatement(e, (List<Statement>) b); :}
 					   | DEF ID LEFTPARENTHESE RIGHTPARENTHESE COLON block
 					   | DEF ID LEFTPARENTHESE ID identifier_comma_list RIGHTPARENTHESE COLON block;
 					   
-stmt_list ::= simple_statement:stmt simple_stmt_semicolon_list:list {: 
-																		((List<Statement>)list).add((Statement)stmt); 
+stmt_list ::= simple_statement:stmt simple_stmt_semicolon_list:list {: 	((List<Statement>)list).add((Statement)stmt); 
 																		RESULT = list;
 																	:};
 																	
@@ -132,29 +132,23 @@ simple_stmt_semicolon_list ::= SEMICOLON simple_statement:stmt simple_stmt_semic
 							   {:
 							    	RESULT = new LinkedList<Statement>(); 
 							   :};
-							   
-statement ::= stmt_list:list NEWLINE {: 
-										RESULT = list;
+							    
+statement ::= stmt_list:list NEWLINE {: RESULT = list;
 									 :}
-			  | compound_statement:stmt {: 
-											List<Statement> list = new LinkedList<Statement>();
+			  | compound_statement:stmt {:	List<Statement> list = new LinkedList<Statement>();
 											list.add((Statement)stmt);
 											RESULT = list;
 										:};
 										
-block ::= stmt_list:list NEWLINE {:
- 									RESULT = (List<Statement>)list;
+block ::= stmt_list:list NEWLINE {: RESULT = (List<Statement>)list;
  								 :}
-		  | NEWLINE START_BLOCK statement_list:list END_BLOCK {:
-		  	 													RESULT = (List<Statement>)list;	
+		  | NEWLINE START_BLOCK statement_list:list END_BLOCK {: RESULT = (List<Statement>)list;	
 		  	 										  		  :};
 		  	 										  
-statement_list ::= statement_list:list statement:stmt {:
-														((List<Statement>)list).addAll((List<Statement>)stmt);
+statement_list ::= statement_list:list statement:stmt {:((List<Statement>)list).addAll((List<Statement>)stmt);
 														RESULT = list;
 													  :}
-				   | statement : stmt {:
-										List<Statement> list = new LinkedList<Statement>();
+				   | statement : stmt {: List<Statement> list = new LinkedList<Statement>();
 										list.addAll((List<Statement>)stmt);
 										RESULT = list;
 									  :};
