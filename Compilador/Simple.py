@@ -1,1 +1,6 @@
-print 2 print 2
+a = 4+85L
+if (a < 80):
+	type (a)
+else:
+	print a
+

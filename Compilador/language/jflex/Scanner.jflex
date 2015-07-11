@@ -251,6 +251,10 @@ SIMPLE_QUOTE_TRIPLE_STRING: '''EJEMPLO'''
                                 System.out.println("COLON");
 								return symbol(sym.COLON);
 							}
+	"while"					{
+								System.out.println("WHILE");
+								return symbol(sym.WHILE);
+							}
 	"def"					{ 
 								System.out.println("DEF");
 								return symbol(sym.DEF); 

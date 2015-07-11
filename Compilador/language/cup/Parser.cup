@@ -24,7 +24,7 @@ terminal String NEWLINE;
 
 terminal String START_BLOCK, END_BLOCK;
 
-terminal String IF, ELSE, DEF;
+terminal String IF, ELSE, DEF, WHILE;
 
 terminal String LEFTPARENTHESE, RIGHTPARENTHESE;
 
@@ -116,6 +116,7 @@ expression ::= INTEGER:i {: RESULT = new IntegerExpression(Integer.valueOf(i)); 
 
 compound_statement ::= IF expression:e COLON block:i ELSE COLON block:b {: RESULT = new IfStatement(e, (List<Statement>) i,(List<Statement>) b ); :}
 					   | IF expression:e COLON block:b {: RESULT = new IfStatement(e, (List<Statement>) b, null); :}
+					   | WHILE expression:e COLON block:b {: RESULT = new WhileStatement(e, (List<Statement>) b); :}
 					   | DEF ID LEFTPARENTHESE RIGHTPARENTHESE COLON block
 					   | DEF ID LEFTPARENTHESE ID identifier_comma_list RIGHTPARENTHESE COLON block;
 					   
