@@ -110,8 +110,8 @@ expression ::= INTEGER:i {: RESULT = new IntegerExpression(Integer.valueOf(i)); 
 			| expression:l RSHIFT_BIT expression:r {: RESULT = new BinaryOperationExpression((Expression)l, ">>", (Expression)r) ;:}
 			| MINUS expression:e {: RESULT = new UnaryOperationExpression("-", (Expression)e); :}
 			| NOT_BIT expression:e {: RESULT = new UnaryOperationExpression("~", (Expression)e); :}
-			| NOT expression:e {: RESULT = new UnaryOperationExpression("not", (Expression)e); :};
-			| LEFTPARENTHESE expression:e RIGHTPARENTHESE {: RESULT = e; :}			
+			| NOT expression:e {: RESULT = new UnaryOperationExpression("not", (Expression)e); :}
+			| LEFTPARENTHESE expression:e RIGHTPARENTHESE {: RESULT = e; :};			
 
 compound_statement ::= IF expression COLON block ELSE COLON block
 					   | IF expression COLON block
