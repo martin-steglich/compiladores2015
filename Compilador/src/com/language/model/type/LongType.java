@@ -35,4 +35,20 @@ public class LongType extends Type{
 		return num != 0;
 	}
 
+
+
+	public boolean equals(LongType obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		LongType other = (LongType) obj;
+		if (num != other.num)
+			return false;
+		return true;
+	}
+	
+	
 }

@@ -21,6 +21,16 @@ public class IdentifierExpression extends Expression {
 	public String getType(){
 		return "Type IdentifierExpression";
 	}
+	
+	
+	
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
 
 	public Type evaluate() throws CompilerException{
 		Type t = null;

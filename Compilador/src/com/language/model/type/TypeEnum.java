@@ -7,10 +7,12 @@ public enum TypeEnum {
 	STRING(3), /**/
 	NONE(4), /**/
 	BOOLEAN(5), /**/
-	ARRAY(6), /**/
+	LIST(6), /**/
 	BREAK(7), /**/
 	CONTINUE(8), /**/
-	FUNCTION(9); /**/
+	FUNCTION(9),
+	DICT(10),
+	TUPLE(11); /**/
 
 	int value;
 
@@ -43,6 +45,15 @@ public enum TypeEnum {
 			break;
 		case 5:
 			name = "bool";
+			break;
+		case 6:
+			name = "list";
+			break;
+		case 10:
+			name = "dict";
+			break;
+		case 11:
+			name = "tuple";
 			break;
 		}
 		

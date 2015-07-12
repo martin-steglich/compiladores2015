@@ -19,6 +19,7 @@ import com.language.model.expression.*;
         this.stack.push(0);
         current_indent = 0;
         colon = false;
+        map = false;
         yybegin(INDENT_STATE);
 %init}
 
@@ -56,6 +57,7 @@ import com.language.model.expression.*;
 	Stack<Integer> stack = new Stack<Integer>();
    	private int current_indent;
    	private boolean colon;
+   	private boolean map;
 %}
 
 LineTerminator  		= \r|\n|\r\n
@@ -106,7 +108,12 @@ SIMPLE_QUOTE_TRIPLE_STRING: '''EJEMPLO'''
 	.                         	{       
 									
                                  	if (current_indent > stack.peek()){
-                                 		throw new ParsingException(yyline, yycolumn, "Error lexicografico: Indentacion incorrecta." );
+                                 		if(!map)
+                                 			throw new ParsingException(yyline, yycolumn, "Error lexicografico: Indentacion incorrecta." );
+                                 		else{
+                                 				yypushback(1);
+                                      			yybegin(NORMAL_STATE);
+                                 			}
                                      }
                                      else if (current_indent == stack.peek()){
                                      	yypushback(1);
@@ -331,7 +338,25 @@ SIMPLE_QUOTE_TRIPLE_STRING: '''EJEMPLO'''
 	")"						{ 
 								System.out.println("RIGHTPARENTHESE");
 								return symbol(sym.RIGHTPARENTHESE); 
-							} 
+							}
+	"{" 					{
+								System.out.println("LEFTLLAVE");
+								map = true;
+								return symbol(sym.LEFTLLAVE);
+							}
+	"}" 					{
+								System.out.println("RIGHTLLAVE");
+								map = false;
+								return symbol(sym.RIGHTLLAVE);
+							}
+	"[" 					{
+								System.out.println("LEFTRECT");
+								return symbol(sym.LEFTRECT);
+							}
+	"]" 					{
+								System.out.println("RIGHTRECT");
+								return symbol(sym.RIGHTRECT);
+							}
 	";" 					{ 
 								System.out.println("SEMICOLON");
 								return symbol(sym.SEMICOLON); 

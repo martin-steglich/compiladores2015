@@ -37,4 +37,20 @@ public class IntegerType extends Type{
 	public boolean getBooleanValue(){
 		return num != 0;
 	}
-};
+
+
+	public boolean equals(IntegerType obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		IntegerType other = (IntegerType) obj;
+		if (num != other.num)
+			return false;
+		return true;
+	}
+
+	
+}

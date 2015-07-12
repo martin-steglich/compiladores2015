@@ -24,4 +24,10 @@ public class BreakType extends Type{
 		return false;
 	}
 
+
+	public boolean equals(BreakType type) {
+		return true;
+	}
+	
+	
 }

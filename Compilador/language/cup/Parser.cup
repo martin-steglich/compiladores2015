@@ -69,11 +69,14 @@ terminal String COLON, SEMICOLON, COMMA;
 
 terminal String BREAK, CONTINUE;
 
+terminal String LEFTLLAVE, RIGHTLLAVE, LEFTRECT, RIGHTRECT;
+
 
 non terminal program, module;
 non terminal statement_newline_list, simple_statement_list, simple_statement, compound_statement;
 non terminal stmt_list, simple_stmt_semicolon_list, statement, statement_list, identifier_comma_list;
-non terminal Expression expression;
+non terminal Expression expression, simple_expression, map_expression;
+non terminal expression_map_list;
 non terminal block;
 
 precedence left IF, ELSE;
@@ -127,15 +130,12 @@ simple_statement ::= expression:e {: RESULT = e; :}
 									RESULT = new BreakStatement(); 
 								:}
 					 | CONTINUE :c {: setContinueFlag(true);
-									  RESULT = new ContinueStatement(); :};
+									  RESULT = new ContinueStatement(); :}
+					 | ID:i LEFTRECT expression:k RIGHTRECT ASSIGN expression:e {: IdentifierExpression id = new IdentifierExpression(i);
+					 																RESULT = new AssignEstructuredTypeStatement(id, e, k);
+					 															:};
 
-expression ::= INTEGER:i {: RESULT = new IntegerExpression(Integer.valueOf(i)); :}
-			| STRING:s {: RESULT = new StringExpression(s); :}
-			| LONG:l {: RESULT = new LongExpression(l); :}
-			| FLOAT:f {: RESULT = new FloatExpression(Float.valueOf(f)); :}
-			| TRUE:b {: RESULT = new BooleanExpression(true); :}
-			| FALSE:b {: RESULT = new BooleanExpression(false); :}
-			| ID:i {: RESULT = new IdentifierExpression(i); :}
+expression ::= simple_expression:e {: RESULT = e; :}
 			| expression:l PLUS expression:r {: RESULT = new BinaryOperationExpression((Expression)l, "+", (Expression)r) ;:}
 			| expression:l MINUS expression:r {: RESULT = new BinaryOperationExpression((Expression)l, "-", (Expression)r) ;:}
 			| expression:l DIV expression:r {: RESULT = new BinaryOperationExpression((Expression)l, "/", (Expression)r) ;:}
@@ -159,7 +159,38 @@ expression ::= INTEGER:i {: RESULT = new IntegerExpression(Integer.valueOf(i)); 
 			| MINUS expression:e {: RESULT = new UnaryOperationExpression("-", (Expression)e); :}
 			| NOT_BIT expression:e {: RESULT = new UnaryOperationExpression("~", (Expression)e); :}
 			| NOT expression:e {: RESULT = new UnaryOperationExpression("not", (Expression)e); :}
-			| LEFTPARENTHESE expression:e RIGHTPARENTHESE {: RESULT = e; :};			
+			| LEFTPARENTHESE expression:e RIGHTPARENTHESE {: RESULT = e; :}
+			| map_expression:e {: RESULT = e; :}
+			| ID:i LEFTRECT expression:e RIGHTRECT {:	IdentifierExpression id = new IdentifierExpression(i); 
+											   			RESULT = new EstructuredTypePositionExpression(id, e);
+											   	   :};
+
+map_expression ::= LEFTLLAVE expression_map_list:list RIGHTLLAVE {: RESULT = new DictionaryExpression((Map<Expression,Expression>)list); :}
+				| LEFTLLAVE NEWLINE expression_map_list:list RIGHTLLAVE {: RESULT = new DictionaryExpression((Map<Expression,Expression>)list); :};
+
+expression_map_list ::= expression:key COLON expression:val COMMA NEWLINE expression_map_list:list {: ((Map<Expression,Expression>)list).put((Expression)key,(Expression)val);
+																									  RESULT = list;
+																									:} 
+					| expression:key COLON expression:val COMMA expression_map_list:list {: ((Map<Expression,Expression>)list).put((Expression)key,(Expression)val);
+																							RESULT = list;
+																						  :}
+					|expression:key COLON expression:val {: Map<Expression, Expression> map = new HashMap<Expression, Expression>();
+															map.put(key,val);
+															RESULT = map;
+														 :}
+					|expression:key COLON expression:val NEWLINE {: Map<Expression, Expression> map = new HashMap<Expression, Expression>();
+															map.put(key,val);
+															RESULT = map;
+														 :}
+					| {: RESULT = new HashMap<Expression, Expression>(); :};
+
+simple_expression ::= INTEGER:i {: RESULT = new IntegerExpression(Integer.valueOf(i)); :}
+					| STRING:s {: RESULT = new StringExpression(s); :}
+					| LONG:l {: RESULT = new LongExpression(l); :}
+					| FLOAT:f {: RESULT = new FloatExpression(Float.valueOf(f)); :}
+					| TRUE:b {: RESULT = new BooleanExpression(true); :}
+					| FALSE:b {: RESULT = new BooleanExpression(false); :}
+					| ID:i {: RESULT = new IdentifierExpression(i); :};	
 
 compound_statement ::= IF expression:e COLON block:i ELSE COLON block:b {: RESULT = new IfStatement(e, (List<Statement>) i,(List<Statement>) b ); :}
 					   | IF expression:e COLON block:b {: RESULT = new IfStatement(e, (List<Statement>) b, null); :}

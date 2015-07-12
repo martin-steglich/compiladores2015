@@ -34,4 +34,25 @@ public class StringType extends Type{
 	public boolean getBooleanValue(){
 		return text.isEmpty();
 	}
+
+
+
+
+	public boolean equals(StringType obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		StringType other = (StringType) obj;
+		if (text == null) {
+			if (other.text != null)
+				return false;
+		} else if (!text.equals(other.text))
+			return false;
+		return true;
+	}
+	
+	
 }

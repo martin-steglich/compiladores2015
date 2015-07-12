@@ -23,4 +23,10 @@ public class ContinueType extends Type{
 		return false;
 	}
 
+
+	public boolean equals(ContinueType type) {
+		return true;
+	}
+	
+	
 }
