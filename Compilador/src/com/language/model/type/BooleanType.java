@@ -47,5 +47,8 @@ public class BooleanType extends Type {
 		else
 			return 0;
 	}
-
+	
+	public boolean getBooleanValue(){
+		return value;
+	}
 }

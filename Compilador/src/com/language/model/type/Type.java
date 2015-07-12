@@ -7,5 +7,6 @@ public abstract class Type {
 	public abstract void print();
 	public abstract TypeEnum getTypeEnum();
 	public abstract String getAsString();
+	public abstract boolean getBooleanValue();
 
 }

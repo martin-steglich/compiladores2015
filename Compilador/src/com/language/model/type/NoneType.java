@@ -28,5 +28,8 @@ public class NoneType extends Type{
 	public String getAsString() {
 		return "none";
 	}
-
+	
+	public boolean getBooleanValue(){
+		return false;
+	}
 };

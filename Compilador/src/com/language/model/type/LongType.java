@@ -30,6 +30,9 @@ public class LongType extends Type{
 	public String getAsString() {
 		return Long.valueOf(num).toString();
 	}
-
+	
+	public boolean getBooleanValue(){
+		return num != 0;
+	}
 
 }

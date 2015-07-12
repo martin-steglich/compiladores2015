@@ -33,5 +33,8 @@ public class IntegerType extends Type{
 	public String getAsString() {
 		return Integer.valueOf(num).toString();
 	}
-
+	
+	public boolean getBooleanValue(){
+		return num != 0;
+	}
 };

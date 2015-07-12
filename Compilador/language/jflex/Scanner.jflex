@@ -312,6 +312,14 @@ SIMPLE_QUOTE_TRIPLE_STRING: '''EJEMPLO'''
 								System.out.println("WHILE");
 								return symbol(sym.WHILE);
 							}
+	"break"					{
+								System.out.println("BREAK");
+								return symbol(sym.BREAK);
+							}
+	"continue"					{
+								System.out.println("CONTINUE");
+								return symbol(sym.CONTINUE);
+							}
 	"def"					{ 
 								System.out.println("DEF");
 								return symbol(sym.DEF); 

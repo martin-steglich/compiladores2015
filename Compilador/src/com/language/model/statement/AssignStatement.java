@@ -16,11 +16,13 @@ public class AssignStatement extends Statement{
 		
 	}
 
-	public void execute() throws CompilerException {
+	public Type execute() throws CompilerException {
 		Type var = expression.evaluate();
 		StackHandler s = StackHandler.getInstance();
 		//Stack stack = s.getStack();
 		s.addVariable(id, var);
+		
+		return var;
 		
 //		String aux = s.findVariable(id).getAsString();
 //		

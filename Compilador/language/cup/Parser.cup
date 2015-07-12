@@ -10,6 +10,43 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Collections;
 
+
+action code {:
+
+	private boolean breakFlag;
+	private int breakLine = 0;
+	private int breakColumn = 0;
+	
+	private boolean continueFlag;
+	private int continueLine = 0;
+	private int continueColumn = 0;
+	
+	public void setBreakFlag(boolean value) {
+		breakFlag = value;
+		//breakLine = line;
+		//breakColumn = column;
+	}
+	
+	public void setContinueFlag(boolean value) {
+		continueFlag = value;
+		//continueLine = line;
+		//continueColumn = column;
+	}
+
+	public void checkBreakContinueErrors() {
+		if (breakFlag) {
+			throw new ParsingException(breakLine, breakColumn, "Sintaxis incorrecta: break");
+		}
+		if (continueFlag) {
+			throw new ParsingException(continueLine, continueColumn, "Sintaxis incorrecta: continue");
+		}
+	}
+	
+ :}; 
+
+
+
+
 terminal String ID, INTEGER, LONG, FLOAT, STRING, TRUE, FALSE;
 
 terminal String ASSIGN, PLUS, MINUS, MUL, DIV, EXP, INT_DIV, MOD;
@@ -29,6 +66,8 @@ terminal String IF, ELSE, DEF, WHILE;
 terminal String LEFTPARENTHESE, RIGHTPARENTHESE;
 
 terminal String COLON, SEMICOLON, COMMA;
+
+terminal String BREAK, CONTINUE;
 
 
 non terminal program, module;
@@ -83,7 +122,12 @@ simple_statement_list ::= simple_statement:stmt simple_statement_list:list {:
 simple_statement ::= expression:e {: RESULT = e; :} 
 					 | ID:i ASSIGN expression:e {: RESULT = new AssignStatement(i, (Expression)e); :}
 					 | PRINT:p expression:e {: RESULT = new PrintStatement((Expression) e); :}
-					 | TYPE:t LEFTPARENTHESE expression:e RIGHTPARENTHESE {: RESULT = new TypeStatement((Expression) e);	:};
+					 | TYPE:t LEFTPARENTHESE expression:e RIGHTPARENTHESE {: RESULT = new TypeStatement((Expression) e);	:}
+					 | BREAK :b  {: setBreakFlag(true);
+									RESULT = new BreakStatement(); 
+								:}
+					 | CONTINUE :c {: setContinueFlag(true);
+									  RESULT = new ContinueStatement(); :};
 
 expression ::= INTEGER:i {: RESULT = new IntegerExpression(Integer.valueOf(i)); :}
 			| STRING:s {: RESULT = new StringExpression(s); :}
@@ -119,7 +163,10 @@ expression ::= INTEGER:i {: RESULT = new IntegerExpression(Integer.valueOf(i)); 
 
 compound_statement ::= IF expression:e COLON block:i ELSE COLON block:b {: RESULT = new IfStatement(e, (List<Statement>) i,(List<Statement>) b ); :}
 					   | IF expression:e COLON block:b {: RESULT = new IfStatement(e, (List<Statement>) b, null); :}
-					   | WHILE expression:e COLON block:b {: RESULT = new WhileStatement(e, (List<Statement>) b); :}
+					   | WHILE expression:e COLON block:b {: setContinueFlag(false);
+															 setBreakFlag(false); 
+					   										 RESULT = new WhileStatement(e, (List<Statement>) b); 
+					   									  :}
 					   | DEF ID LEFTPARENTHESE RIGHTPARENTHESE COLON block
 					   | DEF ID LEFTPARENTHESE ID identifier_comma_list RIGHTPARENTHESE COLON block;
 					   

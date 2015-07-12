@@ -21,18 +21,19 @@ public class IfStatement extends Statement{
 		
 	}
 
-	public void execute() throws CompilerException {
+	public Type execute() throws CompilerException {
 		BooleanType cond = (BooleanType)condition.evaluate();
+		Type ret = null;
 		if(cond.getValue()){
 			for(Statement st : blockIf){
-				st.execute();
+				ret = st.execute();
 			}
 		}else if(blockElse != null){
 			for(Statement st: blockElse){
-				st.execute();
+				ret = st.execute();
 			}
 		}
 		
-		
+		return ret;
 	}
 }

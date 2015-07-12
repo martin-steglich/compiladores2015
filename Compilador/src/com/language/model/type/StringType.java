@@ -30,5 +30,8 @@ public class StringType extends Type{
 	public String getAsString() {
 		return text;
 	}
-
+	
+	public boolean getBooleanValue(){
+		return text.isEmpty();
+	}
 }

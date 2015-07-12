@@ -1,6 +1,6 @@
 package com.language.model.type;
 
-public class FloatType  extends Type{
+public class FloatType extends Type{
     private float num;
 
 	public FloatType(float n){
@@ -29,5 +29,9 @@ public class FloatType  extends Type{
 	@Override
 	public String getAsString() {
 		return Float.valueOf(num).toString();
+	}
+	
+	public boolean getBooleanValue(){
+		return num != 0;
 	}
 }

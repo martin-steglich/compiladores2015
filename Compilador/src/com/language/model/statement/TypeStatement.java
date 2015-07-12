@@ -14,10 +14,12 @@ public class TypeStatement extends Statement{
 		
 	}
 
-	public void execute() throws CompilerException {
+	public Type execute() throws CompilerException {
 		try {
 			Type res = expression.evaluate();
 			System.out.println("type \""+ res.getTypeEnum().toString() + "\"");
+			
+			return res;
 		}catch(CompilerException e){
 			throw e;
 		}

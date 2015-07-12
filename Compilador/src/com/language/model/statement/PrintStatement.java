@@ -14,10 +14,12 @@ public class PrintStatement extends Statement{
 		
 	}
 
-	public void execute() throws CompilerException {
+	public Type execute() throws CompilerException {
 		try {
 			Type res = expression.evaluate();
 			System.out.println(res.getAsString());
+			
+			return res;
 		}catch(CompilerException e){
 			throw e;
 		}

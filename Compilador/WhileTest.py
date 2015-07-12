@@ -1,4 +1,7 @@
-if 2 < 10:
-	print 2
-	if 3 < 10:
-		print 3
+a = 0
+while a < 10:
+	a = a + 1
+	if (a % 2) == 0:
+		continue
+	print a
+	
