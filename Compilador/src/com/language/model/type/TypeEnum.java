@@ -1,5 +1,6 @@
 package com.language.model.type;
 
+
 public enum TypeEnum {
 	INTEGER(0), /**/
 	FLOAT(1), /**/
@@ -41,7 +42,7 @@ public enum TypeEnum {
 			name = "str";
 			break;
 		case 4:
-			name = "null";
+			name = "none";
 			break;
 		case 5:
 			name = "bool";
@@ -59,5 +60,5 @@ public enum TypeEnum {
 		
 		return name;
 	}
-
+	
 }
