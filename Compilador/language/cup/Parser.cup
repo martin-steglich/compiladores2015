@@ -75,8 +75,8 @@ terminal String LEFTLLAVE, RIGHTLLAVE, LEFTRECT, RIGHTRECT;
 non terminal program, module;
 non terminal statement_newline_list, simple_statement_list, simple_statement, compound_statement;
 non terminal stmt_list, simple_stmt_semicolon_list, statement, statement_list, identifier_comma_list;
-non terminal Expression expression, simple_expression, map_expression, tuple_expression;
-non terminal expression_map_list, expression_tuple_list;
+non terminal Expression expression, simple_expression, map_expression, tuple_expression, list_expression;
+non terminal expression_map_list, expression_tuple_list, expression_list_list;
 non terminal block;
 
 precedence left IF, ELSE;
@@ -161,12 +161,34 @@ expression ::= simple_expression:e {: RESULT = e; :}
 			| NOT expression:e {: RESULT = new UnaryOperationExpression("not", (Expression)e); :}
 			| tuple_expression:e {: RESULT = e; :}
 			| map_expression:e {: RESULT = e; :}
+			| list_expression:e {: RESULT = 3; :}
 			| ID:i LEFTRECT expression:e RIGHTRECT {:	IdentifierExpression id = new IdentifierExpression(i); 
 											   			RESULT = new StructuredTypePositionExpression(id, e, null);
 											   	   :}
+			| ID:i LEFTRECT expression:s COLON RIGHTRECT {: IdentifierExpression id = new IdentifierExpression(i); 
+											   							 RESULT = new StructuredTypePositionExpression(id, s, e);
+											   	   					  :}
+			| ID:i LEFTRECT  COLON expression:s RIGHTRECT {: IdentifierExpression id = new IdentifierExpression(i); 
+											   							 RESULT = new StructuredTypePositionExpression(id, s, e);
+											   	   					  :}
 			| ID:i LEFTRECT expression:s COLON expression:e RIGHTRECT {: IdentifierExpression id = new IdentifierExpression(i); 
 											   							 RESULT = new StructuredTypePositionExpression(id, s, e);
-											   	   					  :};
+											   	   					  :}
+			| ID:i LEFTRECT  COLON RIGHTRECT {: IdentifierExpression id = new IdentifierExpression(i); 
+											   							 					RESULT = new StructuredTypePositionExpression(id, s, f);
+											   	   					  					 :}
+			| ID:i LEFTRECT  COLON COLON expression:f RIGHTRECT {: IdentifierExpression id = new IdentifierExpression(i); 
+											   							 					RESULT = new StructuredTypePositionExpression(id, s, f);
+											   	   					  					 :}
+			| ID:i LEFTRECT  COLON expression:s COLON expression:f RIGHTRECT {: IdentifierExpression id = new IdentifierExpression(i); 
+											   							 					RESULT = new StructuredTypePositionExpression(id, s, f);
+											   	   					  					 :}
+			| ID:i LEFTRECT expression:s COLON COLON expression:f RIGHTRECT {: IdentifierExpression id = new IdentifierExpression(i); 
+											   							 					RESULT = new StructuredTypePositionExpression(id, s, f);
+											   	   					  					 :}
+			| ID:i LEFTRECT expression:s COLON expression:e COLON expression:f RIGHTRECT {: IdentifierExpression id = new IdentifierExpression(i); 
+											   							 					RESULT = new StructuredTypePositionExpression(id, s, e);
+											   	   					  					 :};
 			
 
 map_expression ::= LEFTLLAVE expression_map_list:list RIGHTLLAVE {: RESULT = new DictionaryExpression((Map<Expression,Expression>)list); :}
@@ -203,7 +225,21 @@ expression_tuple_list ::= expression:e COMMA expression_tuple_list:list {: ((Arr
 										  RESULT = tuple;
 									   :}
 						| /* epsilon */ {: RESULT = new ArrayList<Expression>(); :};
-							 
+
+list_expression ::= LEFTRECT expression_list_list:list RIGHTRECT {: ((ArrayList<Expression>)list).add(0,e); 
+																									RESULT = new TupleExpression((ArrayList<Expression>)list); 
+																								  :}
+					| LEFTRECT RIGHTRECT {: ArrayList<Expression> tuple = new ArrayList<>();
+														RESULT = new TupleExpression(tuple);
+													 :};
+
+expression_list_list ::=  expression_list_list:list COMMA expression:e {: ((ArrayList<Expression>)list).add(0,e);
+																		    RESULT = list;
+																		:}
+						| expression:e {: ArrayList<Expression> tuple = new ArrayList<>();
+										  tuple.add(0,e);
+										  RESULT = tuple;
+									   :};
 
 simple_expression ::= INTEGER:i {: RESULT = new IntegerExpression(Integer.valueOf(i)); :}
 					| STRING:s {: RESULT = new StringExpression(s); :}
