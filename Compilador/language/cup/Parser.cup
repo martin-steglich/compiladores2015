@@ -75,8 +75,8 @@ terminal String LEFTLLAVE, RIGHTLLAVE, LEFTRECT, RIGHTRECT;
 non terminal program, module;
 non terminal statement_newline_list, simple_statement_list, simple_statement, compound_statement;
 non terminal stmt_list, simple_stmt_semicolon_list, statement, statement_list, identifier_comma_list;
-non terminal Expression expression, simple_expression, map_expression;
-non terminal expression_map_list;
+non terminal Expression expression, simple_expression, map_expression, tuple_expression;
+non terminal expression_map_list, expression_tuple_list;
 non terminal block;
 
 precedence left IF, ELSE;
@@ -132,7 +132,7 @@ simple_statement ::= expression:e {: RESULT = e; :}
 					 | CONTINUE :c {: setContinueFlag(true);
 									  RESULT = new ContinueStatement(); :}
 					 | ID:i LEFTRECT expression:k RIGHTRECT ASSIGN expression:e {: IdentifierExpression id = new IdentifierExpression(i);
-					 																RESULT = new AssignEstructuredTypeStatement(id, e, k);
+					 																RESULT = new AssignStructuredTypeStatement(id, e, k);
 					 															:};
 
 expression ::= simple_expression:e {: RESULT = e; :}
@@ -159,11 +159,15 @@ expression ::= simple_expression:e {: RESULT = e; :}
 			| MINUS expression:e {: RESULT = new UnaryOperationExpression("-", (Expression)e); :}
 			| NOT_BIT expression:e {: RESULT = new UnaryOperationExpression("~", (Expression)e); :}
 			| NOT expression:e {: RESULT = new UnaryOperationExpression("not", (Expression)e); :}
-			| LEFTPARENTHESE expression:e RIGHTPARENTHESE {: RESULT = e; :}
+			| tuple_expression:e {: RESULT = e; :}
 			| map_expression:e {: RESULT = e; :}
 			| ID:i LEFTRECT expression:e RIGHTRECT {:	IdentifierExpression id = new IdentifierExpression(i); 
-											   			RESULT = new EstructuredTypePositionExpression(id, e);
-											   	   :};
+											   			RESULT = new StructuredTypePositionExpression(id, e, null);
+											   	   :}
+			| ID:i LEFTRECT expression:s COLON expression:e RIGHTRECT {: IdentifierExpression id = new IdentifierExpression(i); 
+											   							 RESULT = new StructuredTypePositionExpression(id, s, e);
+											   	   					  :};
+			
 
 map_expression ::= LEFTLLAVE expression_map_list:list RIGHTLLAVE {: RESULT = new DictionaryExpression((Map<Expression,Expression>)list); :}
 				| LEFTLLAVE NEWLINE expression_map_list:list RIGHTLLAVE {: RESULT = new DictionaryExpression((Map<Expression,Expression>)list); :};
@@ -182,7 +186,24 @@ expression_map_list ::= expression:key COLON expression:val COMMA NEWLINE expres
 															map.put(key,val);
 															RESULT = map;
 														 :}
-					| {: RESULT = new HashMap<Expression, Expression>(); :};
+					| /*epsilon*/{: RESULT = new HashMap<Expression, Expression>(); :};
+
+tuple_expression ::= LEFTPARENTHESE expression:e COMMA expression_tuple_list:list RIGHTPARENTHESE {: ((ArrayList<Expression>)list).add(0,e); 
+																									RESULT = new TupleExpression((ArrayList<Expression>)list); 
+																								  :}
+					| LEFTPARENTHESE RIGHTPARENTHESE {: ArrayList<Expression> tuple = new ArrayList<>();
+														RESULT = new TupleExpression(tuple);
+													 :};
+
+expression_tuple_list ::= expression:e COMMA expression_tuple_list:list {: ((ArrayList<Expression>)list).add(0,e);
+																		    RESULT = list;
+																		:}
+						| expression:e {: ArrayList<Expression> tuple = new ArrayList<>();
+										  tuple.add(0,e);
+										  RESULT = tuple;
+									   :}
+						| /* epsilon */ {: RESULT = new ArrayList<Expression>(); :};
+							 
 
 simple_expression ::= INTEGER:i {: RESULT = new IntegerExpression(Integer.valueOf(i)); :}
 					| STRING:s {: RESULT = new StringExpression(s); :}
@@ -190,7 +211,8 @@ simple_expression ::= INTEGER:i {: RESULT = new IntegerExpression(Integer.valueO
 					| FLOAT:f {: RESULT = new FloatExpression(Float.valueOf(f)); :}
 					| TRUE:b {: RESULT = new BooleanExpression(true); :}
 					| FALSE:b {: RESULT = new BooleanExpression(false); :}
-					| ID:i {: RESULT = new IdentifierExpression(i); :};	
+					| ID:i {: RESULT = new IdentifierExpression(i); :}
+					| LEFTPARENTHESE expression:e RIGHTPARENTHESE {: RESULT = e; :};	
 
 compound_statement ::= IF expression:e COLON block:i ELSE COLON block:b {: RESULT = new IfStatement(e, (List<Statement>) i,(List<Statement>) b ); :}
 					   | IF expression:e COLON block:b {: RESULT = new IfStatement(e, (List<Statement>) b, null); :}

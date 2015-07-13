@@ -9,14 +9,14 @@ import com.language.model.stack.StackHandler;
 import com.language.model.type.DictionaryType;
 import com.language.model.type.Type;
 
-public class AssignEstructuredTypeStatement extends Statement {
+public class AssignStructuredTypeStatement extends Statement {
 
 	Expression expression;
 	IdentifierExpression id;
 	Expression position;
 	int lineNumber;
 
-	public AssignEstructuredTypeStatement(IdentifierExpression id,
+	public AssignStructuredTypeStatement(IdentifierExpression id,
 			Expression expression, Expression position) {
 		this.expression = expression;
 		this.id = id;

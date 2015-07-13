@@ -11,7 +11,7 @@ public class Tester {
 		//ProgramParser.parse("WhileTest.py");
 		//ProgramParser.parse("Simple2.py");
 		//ProgramParser.parse("TestIf.py");
-		ProgramParser.parse("DictionaryTest.py");
+		ProgramParser.parse("StructuredTypesTest.py");
 	}
 	
 }
