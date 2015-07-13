@@ -85,6 +85,8 @@ precedence left PLUS, MINUS;
 precedence left MUL, DIV, EXP, INT_DIV, MOD;
 precedence left AND, OR, EQUALS, NOT_EQUALS, LESS_THAN, GREAT_THAN, LESSEQUAL_THAN, GREATEQUAL_THAN;
 precedence left AND_BIT, OR_BIT, XOR_BIT, LSHIFT_BIT, RSHIFT_BIT;
+precedence right ID, LEFTRECT;
+
 
 program	::=	module:list {: 
 							Collections.reverse((List<Statement>)list);
@@ -135,7 +137,14 @@ simple_statement ::= expression:e {: RESULT = e; :}
 					 																RESULT = new AssignStructuredTypeStatement(id, e, k);
 					 															:};
 
-expression ::= simple_expression:e {: RESULT = e; :}
+expression ::= INTEGER:i {: RESULT = new IntegerExpression(Integer.valueOf(i)); :}
+					| STRING:s {: RESULT = new StringExpression(s); :}
+					| LONG:l {: RESULT = new LongExpression(l); :}
+					| FLOAT:f {: RESULT = new FloatExpression(Float.valueOf(f)); :}
+					| TRUE:b {: RESULT = new BooleanExpression(true); :}
+					| FALSE:b {: RESULT = new BooleanExpression(false); :}	
+					| ID:i {: RESULT = new IdentifierExpression(i); :}
+					| LEFTPARENTHESE expression:e RIGHTPARENTHESE {: RESULT = e; :}
 			| expression:l PLUS expression:r {: RESULT = new BinaryOperationExpression((Expression)l, "+", (Expression)r) ;:}
 			| expression:l MINUS expression:r {: RESULT = new BinaryOperationExpression((Expression)l, "-", (Expression)r) ;:}
 			| expression:l DIV expression:r {: RESULT = new BinaryOperationExpression((Expression)l, "/", (Expression)r) ;:}
@@ -161,24 +170,23 @@ expression ::= simple_expression:e {: RESULT = e; :}
 			| NOT expression:e {: RESULT = new UnaryOperationExpression("not", (Expression)e); :}
 			| tuple_expression:e {: RESULT = e; :}
 			| map_expression:e {: RESULT = e; :}
-			| list_expression:e {: RESULT = 3; :}
 			| ID:i LEFTRECT expression:e RIGHTRECT {:	IdentifierExpression id = new IdentifierExpression(i); 
 											   			RESULT = new StructuredTypePositionExpression(id, e, null);
 											   	   :}
 			| ID:i LEFTRECT expression:s COLON RIGHTRECT {: IdentifierExpression id = new IdentifierExpression(i); 
-											   							 RESULT = new StructuredTypePositionExpression(id, s, e);
+											   							 RESULT = new StructuredTypePositionExpression(id, s, null);
 											   	   					  :}
 			| ID:i LEFTRECT  COLON expression:s RIGHTRECT {: IdentifierExpression id = new IdentifierExpression(i); 
-											   							 RESULT = new StructuredTypePositionExpression(id, s, e);
+											   							 RESULT = new StructuredTypePositionExpression(id, s, null);
 											   	   					  :}
 			| ID:i LEFTRECT expression:s COLON expression:e RIGHTRECT {: IdentifierExpression id = new IdentifierExpression(i); 
 											   							 RESULT = new StructuredTypePositionExpression(id, s, e);
 											   	   					  :}
 			| ID:i LEFTRECT  COLON RIGHTRECT {: IdentifierExpression id = new IdentifierExpression(i); 
-											   							 					RESULT = new StructuredTypePositionExpression(id, s, f);
+											   							 					RESULT = new StructuredTypePositionExpression(id, null, null);
 											   	   					  					 :}
 			| ID:i LEFTRECT  COLON COLON expression:f RIGHTRECT {: IdentifierExpression id = new IdentifierExpression(i); 
-											   							 					RESULT = new StructuredTypePositionExpression(id, s, f);
+											   							 					RESULT = new StructuredTypePositionExpression(id, null, f);
 											   	   					  					 :}
 			| ID:i LEFTRECT  COLON expression:s COLON expression:f RIGHTRECT {: IdentifierExpression id = new IdentifierExpression(i); 
 											   							 					RESULT = new StructuredTypePositionExpression(id, s, f);
@@ -188,8 +196,9 @@ expression ::= simple_expression:e {: RESULT = e; :}
 											   	   					  					 :}
 			| ID:i LEFTRECT expression:s COLON expression:e COLON expression:f RIGHTRECT {: IdentifierExpression id = new IdentifierExpression(i); 
 											   							 					RESULT = new StructuredTypePositionExpression(id, s, e);
-											   	   					  					 :};
-			
+											   	   					  					 :}
+			| list_expression:e {: RESULT = e; :};
+
 
 map_expression ::= LEFTLLAVE expression_map_list:list RIGHTLLAVE {: RESULT = new DictionaryExpression((Map<Expression,Expression>)list); :}
 				| LEFTLLAVE NEWLINE expression_map_list:list RIGHTLLAVE {: RESULT = new DictionaryExpression((Map<Expression,Expression>)list); :};
@@ -226,14 +235,14 @@ expression_tuple_list ::= expression:e COMMA expression_tuple_list:list {: ((Arr
 									   :}
 						| /* epsilon */ {: RESULT = new ArrayList<Expression>(); :};
 
-list_expression ::= LEFTRECT expression_list_list:list RIGHTRECT {: ((ArrayList<Expression>)list).add(0,e); 
+list_expression ::= LEFTRECT expression:e COMMA expression_tuple_list:list RIGHTRECT {: ((ArrayList<Expression>)list).add(0,e); 
 																									RESULT = new TupleExpression((ArrayList<Expression>)list); 
 																								  :}
 					| LEFTRECT RIGHTRECT {: ArrayList<Expression> tuple = new ArrayList<>();
 														RESULT = new TupleExpression(tuple);
 													 :};
 
-expression_list_list ::=  expression_list_list:list COMMA expression:e {: ((ArrayList<Expression>)list).add(0,e);
+expression_list_list ::= expression:e COMMA expression_list_list:list {: ((ArrayList<Expression>)list).add(0,e);
 																		    RESULT = list;
 																		:}
 						| expression:e {: ArrayList<Expression> tuple = new ArrayList<>();
@@ -241,14 +250,6 @@ expression_list_list ::=  expression_list_list:list COMMA expression:e {: ((Arra
 										  RESULT = tuple;
 									   :};
 
-simple_expression ::= INTEGER:i {: RESULT = new IntegerExpression(Integer.valueOf(i)); :}
-					| STRING:s {: RESULT = new StringExpression(s); :}
-					| LONG:l {: RESULT = new LongExpression(l); :}
-					| FLOAT:f {: RESULT = new FloatExpression(Float.valueOf(f)); :}
-					| TRUE:b {: RESULT = new BooleanExpression(true); :}
-					| FALSE:b {: RESULT = new BooleanExpression(false); :}
-					| ID:i {: RESULT = new IdentifierExpression(i); :}
-					| LEFTPARENTHESE expression:e RIGHTPARENTHESE {: RESULT = e; :};	
 
 compound_statement ::= IF expression:e COLON block:i ELSE COLON block:b {: RESULT = new IfStatement(e, (List<Statement>) i,(List<Statement>) b ); :}
 					   | IF expression:e COLON block:b {: RESULT = new IfStatement(e, (List<Statement>) b, null); :}
