@@ -291,6 +291,10 @@ SIMPLE_QUOTE_TRIPLE_STRING: '''EJEMPLO'''
                                 System.out.println("PRINT");
 								return symbol(sym.PRINT);
 							}
+	"raw_input"				{ 
+                                System.out.println("RAW_INPUT");
+								return symbol(sym.RAW_INPUT);
+							}
 	"type"					{ 
 								System.out.println("TYPE");
 								return symbol(sym.TYPE);	

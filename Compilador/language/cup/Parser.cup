@@ -55,7 +55,7 @@ terminal String AND_BIT, OR_BIT, XOR_BIT, NOT_BIT, LSHIFT_BIT, RSHIFT_BIT;
 
 terminal String AND, OR, NOT, EQUALS, NOT_EQUALS, LESS_THAN, GREAT_THAN, LESSEQUAL_THAN, GREATEQUAL_THAN;
 
-terminal String PRINT, TYPE;
+terminal String PRINT, TYPE, RAW_INPUT;
 
 terminal String NEWLINE;
 
@@ -168,6 +168,7 @@ expression ::= INTEGER:i {: RESULT = new IntegerExpression(Integer.valueOf(i)); 
 			| MINUS expression:e {: RESULT = new UnaryOperationExpression("-", (Expression)e); :}
 			| NOT_BIT expression:e {: RESULT = new UnaryOperationExpression("~", (Expression)e); :}
 			| NOT expression:e {: RESULT = new UnaryOperationExpression("not", (Expression)e); :}
+			| RAW_INPUT LEFTPARENTHESE expression:e RIGHTPARENTHESE {: RESULT = new ReadExpression((Expression) e); :}
 			| tuple_expression:e {: RESULT = e; :}
 			| map_expression:e {: RESULT = e; :}
 			| list_expression:e {: RESULT = e; :}

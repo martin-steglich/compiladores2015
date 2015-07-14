@@ -12,6 +12,7 @@ public class Tester {
 		//ProgramParser.parse("Simple2.py");
 		//ProgramParser.parse("TestIf.py");
 		ProgramParser.parse("StructuredTypesTest.py");
+		ProgramParser.parse("EntradaSalida.py");
 	}
 	
 }
