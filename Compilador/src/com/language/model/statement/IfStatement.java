@@ -14,10 +14,11 @@ public class IfStatement extends Statement{
 	Expression condition;
 	int lineNumber;
 	
-	public IfStatement(Expression condition, List<Statement> blockIf, List<Statement> blockElse) {
+	public IfStatement(Expression condition, List<Statement> blockIf, List<Statement> blockElse, int lineNumber) {
 		this.condition = condition;
 		this.blockIf = blockIf;
 		this.blockElse = blockElse;
+		this.lineNumber = lineNumber;
 		
 	}
 

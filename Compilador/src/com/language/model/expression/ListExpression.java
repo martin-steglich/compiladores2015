@@ -11,7 +11,7 @@ public class ListExpression  extends Expression {
 	ArrayList<Type> elements;
 	int lineNumber;
 	
-	public ListExpression(ArrayList<Expression> elements) throws CompilerException {
+	public ListExpression(ArrayList<Expression> elements, int lineNumber) throws CompilerException {
 		this.elements = new ArrayList<>();
 		for (Expression e : elements)
 		{

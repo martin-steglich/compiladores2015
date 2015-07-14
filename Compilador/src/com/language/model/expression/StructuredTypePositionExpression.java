@@ -24,13 +24,13 @@ public class StructuredTypePositionExpression extends Expression{
 	
 	
 	
-	public StructuredTypePositionExpression(IdentifierExpression id, Expression startPosition, Expression endPosition, Expression cantPos, boolean tienePuntos ) {
+	public StructuredTypePositionExpression(IdentifierExpression id, Expression startPosition, Expression endPosition, Expression cantPos, boolean tienePuntos, int lineNumber ) {
 		this.id = id;
 		this.startPosition = startPosition;
 		this.endPosition = endPosition; 
 		this.cantPos = cantPos;
 		this.tienePuntos = tienePuntos;
-//		this.lineNumber = lineNumber;
+		this.lineNumber = lineNumber;
 	}
 
 	@Override

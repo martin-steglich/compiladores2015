@@ -8,9 +8,9 @@ public class IntegerExpression extends Expression {
 	int num;
 	int lineNumber;
 
-	public IntegerExpression(int num) {
+	public IntegerExpression(int num, int lineNumber) {
 		this.num = num;
-		//this.lineNumber = lineNumber;
+		this.lineNumber = lineNumber;
 	}
 
 	public void printExp() {

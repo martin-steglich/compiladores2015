@@ -9,8 +9,9 @@ public class TypeStatement extends Statement{
 	Expression expression;
 	int lineNumber;
 	
-	public TypeStatement(Expression expression) {
+	public TypeStatement(Expression expression, int lineNumber) {
 		this.expression = expression;
+		this.lineNumber = lineNumber;
 		
 	}
 

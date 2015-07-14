@@ -22,3 +22,5 @@ print b[:]
 print b[::2]
 print b[:4:1]
 print b[4::3]
+b = True
+print b

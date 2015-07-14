@@ -14,10 +14,10 @@ public class UnaryOperationExpression extends Expression {
 	String op;
     int lineNumber;
 
-	public UnaryOperationExpression(String type, Expression exp) {
+	public UnaryOperationExpression(String type, Expression exp, int lineNumber) {
 		expression = exp;
 		op = type; 
-		//lineNumber = linenum;
+		this.lineNumber = lineNumber;
 	};
 
 	public void printExp(){

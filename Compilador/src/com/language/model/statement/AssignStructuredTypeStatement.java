@@ -17,10 +17,11 @@ public class AssignStructuredTypeStatement extends Statement {
 	int lineNumber;
 
 	public AssignStructuredTypeStatement(IdentifierExpression id,
-			Expression expression, Expression position) {
+			Expression expression, Expression position, int lineNumber) {
 		this.expression = expression;
 		this.id = id;
 		this.position = position;
+		this.lineNumber = lineNumber;
 
 	}
 

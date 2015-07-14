@@ -9,8 +9,9 @@ public class PrintStatement extends Statement{
 	Expression expression;
 	int lineNumber;
 	
-	public PrintStatement(Expression expression) {
+	public PrintStatement(Expression expression, int lineNumber) {
 		this.expression = expression;
+		this.lineNumber = lineNumber;
 		
 	}
 

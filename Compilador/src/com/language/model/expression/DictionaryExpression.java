@@ -13,7 +13,7 @@ public class DictionaryExpression extends Expression{
 	Map<Type, Type> dictionary;
 	int lineNumber;
 		
-	public DictionaryExpression(Map<Expression, Expression> dict) throws CompilerException {
+	public DictionaryExpression(Map<Expression, Expression> dict, int lineNumber) throws CompilerException {
 		Map<Type, Type> dictionary = new HashMap<>();
 		for (Entry<Expression, Expression> entry : dict.entrySet())
 		{

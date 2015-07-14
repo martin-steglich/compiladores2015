@@ -10,9 +10,10 @@ public class AssignStatement extends Statement{
 	String id;
 	int lineNumber;
 	
-	public AssignStatement(String id, Expression expression) {
+	public AssignStatement(String id, Expression expression, int lineNumber) {
 		this.expression = expression;
 		this.id = id;
+		this.lineNumber = lineNumber;
 		
 	}
 

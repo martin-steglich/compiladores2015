@@ -8,9 +8,9 @@ public class BooleanExpression extends Expression {
 	boolean value;
     int lineNumber;
 
-    public BooleanExpression(boolean value) {
+    public BooleanExpression(boolean value, int lineNumber) {
     	this.value = value;
-    	//lineNumber = linenum;
+    	this.lineNumber = lineNumber;
 	};
 
 	public void printExp(){

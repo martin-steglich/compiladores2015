@@ -9,9 +9,9 @@ public class FloatExpression extends  Expression {
 	float num;
 	int lineNumber;
 
-	public FloatExpression(float num) {
+	public FloatExpression(float num, int lineNumber) {
 		this.num = num;
-		//this.lineNumber = lineNumber;
+		this.lineNumber = lineNumber;
 	}
 
 	public void printExp() {

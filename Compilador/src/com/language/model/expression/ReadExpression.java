@@ -11,14 +11,15 @@ public class ReadExpression extends Expression {
 	Type message;
 	int lineNumber;
 
-	public ReadExpression(Expression expression) throws CompilerException {
+	public ReadExpression(Expression expression, int lineNumber) throws CompilerException {
 		Type msg = expression.evaluate();
 		if ((msg.getType() != 4) && (msg.getType() != 7) && (msg.getType() != 8) && (msg.getType() != 9))
 			this.message = msg;
 		else
 			throw new CompilerException(lineNumber,
 					"Tipo de datos no soportado como mensaje para la funcion raw_input");
-
+		
+		this.lineNumber = lineNumber;
 	}
 
 	@Override

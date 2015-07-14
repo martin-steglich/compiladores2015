@@ -1,4 +1,2 @@
-if 3 < 5:
-	print 3
-print 5
-print 6
+print 'hola' + 'h'
+print 'hola' + 3L

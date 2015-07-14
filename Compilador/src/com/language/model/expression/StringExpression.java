@@ -8,9 +8,9 @@ public class StringExpression extends Expression {
 	String text;
 	int lineNumber;
 
-	public StringExpression(String text) {
+	public StringExpression(String text, int lineNumber) {
 		this.text = text;
-		//this.lineNumber = lineNumber;
+		this.lineNumber = lineNumber;
 	}
 
 	public void printExp() {

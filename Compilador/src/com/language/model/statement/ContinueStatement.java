@@ -9,6 +9,12 @@ public class ContinueStatement extends Statement {
 	
 	int lineNumber;
 	
+	
+	
+	public ContinueStatement(int lineNumber) {
+		this.lineNumber = lineNumber;
+	}
+
 	public void printSent() {
 	}
 

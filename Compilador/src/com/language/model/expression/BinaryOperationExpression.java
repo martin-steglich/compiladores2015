@@ -20,11 +20,11 @@ public class BinaryOperationExpression extends Expression {
 	String op;
     int lineNumber;
 
-	public BinaryOperationExpression(Expression lop, String type, Expression rop) {
+	public BinaryOperationExpression(Expression lop, String type, Expression rop, int lineNumber) {
 		left = lop;
 		right = rop;
 		op = type; 
-		//lineNumber = linenum;
+		this.lineNumber = lineNumber;
 	};
 
 	public void printExp(){

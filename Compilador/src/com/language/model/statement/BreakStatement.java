@@ -8,6 +8,12 @@ public class BreakStatement extends Statement {
 
 	int lineNumber;
 	
+	
+	
+	public BreakStatement(int lineNumber) {
+		this.lineNumber = lineNumber;
+	}
+
 	public void printSent() {
 	}
 

@@ -8,12 +8,12 @@ public class LongExpression extends Expression {
 	long num;
 	int lineNumber;
 
-	public LongExpression(String num) {
+	public LongExpression(String num, int lineNumber) {
 		int largo = num.length();
 		String sinL = num.substring(0,largo-1);
 		long lg = Long.parseLong(sinL);
 		this.num = lg;
-		//this.lineNumber = lineNumber;
+		this.lineNumber = lineNumber;
 	}
 
 	public void printExp() {

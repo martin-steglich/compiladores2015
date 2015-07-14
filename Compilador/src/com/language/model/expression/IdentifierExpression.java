@@ -9,9 +9,9 @@ public class IdentifierExpression extends Expression {
 	String id;
     int lineNumber;
 
-    public IdentifierExpression(String id) {
+    public IdentifierExpression(String id, int lineNumber) {
     	this.id = id;
-    	//lineNumber = linenum;
+    	this.lineNumber = lineNumber;
 	};
 
 	public void printExp(){

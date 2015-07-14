@@ -15,9 +15,10 @@ public class WhileStatement extends Statement {
 	Expression condition;
 	int lineNumber;
 
-	public WhileStatement(Expression condition, List<Statement> block) {
+	public WhileStatement(Expression condition, List<Statement> block, int lineNumber) {
 		this.condition = condition;
 		this.block = block;
+		this.lineNumber = lineNumber;
 	}
 
 	public Type execute() throws CompilerException {

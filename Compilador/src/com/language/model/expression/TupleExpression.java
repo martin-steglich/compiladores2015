@@ -14,7 +14,7 @@ public class TupleExpression extends Expression{
 	ArrayList<Type> tuple;
 	int lineNumber;
 		
-	public TupleExpression(ArrayList<Expression> tuple) throws CompilerException{
+	public TupleExpression(ArrayList<Expression> tuple, int lineNumber) throws CompilerException{
 		this.tuple = new ArrayList<>();
 		for (Expression e : tuple)
 		{
