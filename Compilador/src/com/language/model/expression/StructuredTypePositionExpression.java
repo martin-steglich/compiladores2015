@@ -9,7 +9,7 @@ import com.language.model.type.DictionaryType;
 import com.language.model.type.IntegerType;
 import com.language.model.type.LongType;
 import com.language.model.type.TupleType;
-import com.language.model.type.ArrayType;
+import com.language.model.type.ListType;
 import com.language.model.type.Type;
 
 public class StructuredTypePositionExpression extends Expression{
@@ -57,7 +57,7 @@ public class StructuredTypePositionExpression extends Expression{
 					long start = (long)((IntegerType)startPos).getValue();
 					startPos = new LongType(start);
 				}
-				ArrayList<Type> list = ((ArrayType)structuredType).getList();
+				ArrayList<Type> list = ((ListType)structuredType).getList();
 				int size = list.size();
 				
 				if(((LongType)startPos).getValue() >= size)
@@ -99,7 +99,7 @@ public class StructuredTypePositionExpression extends Expression{
 								ListaRet.add(list.get((int)i));
 							}
 						}
-						return new ArrayType(ListaRet);
+						return new ListType(ListaRet);
 										
 					}else{
 						ArrayList<Type> ListaRet = new ArrayList<>();
@@ -113,14 +113,14 @@ public class StructuredTypePositionExpression extends Expression{
 								ListaRet.add(list.get(i));
 							}
 						}
-						return new ArrayType(ListaRet);
+						return new ListType(ListaRet);
 					}
 					
 				}
 			
 			}else{
 				
-				ArrayList<Type> list = ((ArrayType)structuredType).getList();
+				ArrayList<Type> list = ((ListType)structuredType).getList();
 				int size = list.size();
 				ArrayList<Type> ListRet = new ArrayList<>();
 				if (endPosition != null){
@@ -161,7 +161,7 @@ public class StructuredTypePositionExpression extends Expression{
 					}
 					
 				}
-				return new ArrayType(ListRet);
+				return new ListType(ListRet);
 			}	
 		} else if(structuredType.getType() == 11){ //TUPLE
 			if (startPosition!= null){

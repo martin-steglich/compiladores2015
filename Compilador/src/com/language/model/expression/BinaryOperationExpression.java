@@ -6,6 +6,7 @@ import com.language.exceptions.CompilerException;
 import com.language.model.type.BooleanType;
 import com.language.model.type.FloatType;
 import com.language.model.type.IntegerType;
+import com.language.model.type.ListType;
 import com.language.model.type.LongType;
 import com.language.model.type.StringType;
 import com.language.model.type.TupleType;
@@ -145,6 +146,14 @@ public class BinaryOperationExpression extends Expression {
 			resultado.addAll(tupleDer);
 			res = new TupleType(resultado);
 		}
+		else if(listList){
+			ArrayList<Type> resultado = new ArrayList<>();
+			ArrayList<Type> listIzq = ((ListType)izq).getList();
+			ArrayList<Type> listDer = ((ListType)der).getList();
+			resultado.addAll(listIzq);
+			resultado.addAll(listDer);
+			res = new ListType(resultado);
+		}
 		else{
 			throw new CompilerException(lineNumber, "Tipos de datos no esperados para la operacion suma");
 		}
@@ -252,6 +261,7 @@ public class BinaryOperationExpression extends Expression {
 		boolean intFloat = (izq.getType() == 0) && (der.getType() == 1);
 		boolean intBoolean = (izq.getType() == 0) && (der.getType() == 5);
 		boolean intTuple = (izq.getType() == 0) && (der.getType() == 11);
+		boolean intList = (izq.getType() == 0) && (der.getType() == 6);
 		
 		boolean stringInt = (izq.getType() == 3) && (der.getType() == 0);
 		boolean stringLong = (izq.getType() == 3) && (der.getType() == 2);
@@ -263,6 +273,7 @@ public class BinaryOperationExpression extends Expression {
 		boolean longFloat = (izq.getType() == 2) && (der.getType() == 1);
 		boolean longBoolean = (izq.getType() == 2) && (der.getType() == 5);
 		boolean longTuple = (izq.getType() == 2) && (der.getType() == 11);
+		boolean longList = (izq.getType() == 2) && (der.getType() == 6);
 		
 		boolean floatInt = (izq.getType() == 1) && (der.getType() == 0);
 		boolean floatLong = (izq.getType() == 1) && (der.getType() == 2);
@@ -276,10 +287,15 @@ public class BinaryOperationExpression extends Expression {
 		boolean booleanFloat = (izq.getType() == 5) && (der.getType() == 1);
 		boolean booleanBoolean = (izq.getType() == 5) && (der.getType() == 5);
 		boolean booleanTuple = (izq.getType() == 5) && (der.getType() == 11);
+		boolean booleanList = (izq.getType() == 5) && (der.getType() == 6);
 		
 		boolean tupleInt = (izq.getType() == 11) && (der.getType() == 0);
 		boolean tupleLong = (izq.getType() == 11) && (der.getType() == 2);
 		boolean tupleBoolean = (izq.getType() == 11) && (der.getType() == 5);
+		
+		boolean listInt = (izq.getType() == 6) && (der.getType() == 0);
+		boolean listLong = (izq.getType() == 6) && (der.getType() == 2);
+		boolean listBoolean = (izq.getType() == 6) && (der.getType() == 5);
 		
 		if(intInt){
 			int resultado = ((IntegerType)izq).getValue() * ((IntegerType)der).getValue();
@@ -310,6 +326,13 @@ public class BinaryOperationExpression extends Expression {
 			for(int i = 1; i<= rep; i++)
 				resultado.addAll(tupleDer);
 			res = new TupleType(resultado);
+		}else if(intList){
+			int rep = ((IntegerType)izq).getValue();
+			ArrayList<Type> listDer = ((ListType)der).getList();
+			ArrayList<Type> resultado = new ArrayList<>();
+			for(int i = 1; i<= rep; i++)
+				resultado.addAll(listDer);
+			res = new ListType(resultado);
 		}
 		else if(stringInt){
 			int rep = ((IntegerType)der).getValue();
@@ -362,6 +385,13 @@ public class BinaryOperationExpression extends Expression {
 			for(long i = 1; i<= rep; i++)
 				resultado.addAll(tupleDer);
 			res = new TupleType(resultado);
+		}else if(longList){
+			long rep = ((LongType)izq).getValue();
+			ArrayList<Type> listDer = ((ListType)der).getList();
+			ArrayList<Type> resultado = new ArrayList<>();
+			for(long i = 1; i<= rep; i++)
+				resultado.addAll(listDer);
+			res = new ListType(resultado);
 		}
 		else if(floatInt){
 			float resultado = ((FloatType)izq).getValue() * ((IntegerType)der).getValue();
@@ -410,6 +440,14 @@ public class BinaryOperationExpression extends Expression {
 				resultado.addAll(tupleDer);
 			res = new TupleType(resultado);
 		}
+		else if(booleanList){
+			int rep = ((BooleanType)izq).getEquivalentInt();
+			ArrayList<Type> listDer = ((ListType)der).getList();
+			ArrayList<Type> resultado = new ArrayList<>();
+			for(int i = 1; i<= rep; i++)
+				resultado.addAll(listDer);
+			res = new ListType(resultado);
+		}
 		else if(tupleInt){
 			int rep = ((IntegerType)der).getValue();
 			ArrayList<Type> resultado = new ArrayList<>();
@@ -432,6 +470,30 @@ public class BinaryOperationExpression extends Expression {
 			ArrayList<Type> tupleIzq = ((TupleType)izq).getTuple();
 			for(long i = 1; i<= rep; i++)
 				resultado.addAll(tupleIzq);
+			res = new TupleType(resultado);
+		}
+		else if(listInt){
+			int rep = ((IntegerType)der).getValue();
+			ArrayList<Type> resultado = new ArrayList<>();
+			ArrayList<Type> listIzq = ((ListType)izq).getList();
+			for(int i = 1; i<= rep; i++)
+				resultado.addAll(listIzq);
+			res = new ListType(resultado);
+		}
+		else if(listBoolean){
+			int rep = ((BooleanType)der).getEquivalentInt();
+			ArrayList<Type> resultado = new ArrayList<>();
+			ArrayList<Type> listIzq = ((ListType)izq).getList();
+			for(int i = 1; i<= rep; i++)
+				resultado.addAll(listIzq);
+			res = new TupleType(resultado);
+		}
+		else if(listLong){
+			long rep = ((LongType)der).getValue();
+			ArrayList<Type> resultado = new ArrayList<>();
+			ArrayList<Type> listIzq = ((ListType)izq).getList();
+			for(long i = 1; i<= rep; i++)
+				resultado.addAll(listIzq);
 			res = new TupleType(resultado);
 		}
 	    else {
@@ -1049,6 +1111,7 @@ public class BinaryOperationExpression extends Expression {
 		boolean intFloat = (izq.getType() == 0) && (der.getType() == 1);
 		boolean intBoolean = (izq.getType() == 0) && (der.getType() == 5);
 		boolean intTuple = (izq.getType() == 0) && (der.getType() == 11);
+		boolean intList = (izq.getType() == 0) && (der.getType() == 6);
 		
 		boolean stringInt = (izq.getType() == 3) && (der.getType() == 0);
 		boolean stringString = (izq.getType() == 3) && (der.getType() == 3);
@@ -1056,12 +1119,14 @@ public class BinaryOperationExpression extends Expression {
 		boolean stringBoolean = (izq.getType() == 3) && (der.getType() == 5);
 		boolean stringFloat = (izq.getType() == 3) && (der.getType() == 1);
 		boolean stringTuple = (izq.getType() == 3) && (der.getType() == 11);
+		boolean stringList = (izq.getType() == 3) && (der.getType() == 6);
 		
 		boolean longInt = (izq.getType() == 2) && (der.getType() == 0);
 		boolean longString = (izq.getType() == 2) && (der.getType() == 3);
 		boolean longLong = (izq.getType() == 2) && (der.getType() == 3);
 		boolean longFloat = (izq.getType() == 2) && (der.getType() == 1);
 		boolean longTuple = (izq.getType() == 2) && (der.getType() == 11);
+		boolean longList = (izq.getType() == 2) && (der.getType() == 6);
 		boolean longBoolean = (izq.getType() == 2) && (der.getType() == 5);
 		
 		boolean floatInt = (izq.getType() == 1) && (der.getType() == 0);
@@ -1069,6 +1134,7 @@ public class BinaryOperationExpression extends Expression {
 		boolean floatLong = (izq.getType() == 1) && (der.getType() == 2);
 		boolean floatFloat = (izq.getType() == 1) && (der.getType() == 1);
 		boolean floatTuple = (izq.getType() == 1) && (der.getType() == 11);
+		boolean floatList = (izq.getType() == 1) && (der.getType() == 6);
 		boolean floatBoolean = (izq.getType() == 1) && (der.getType() == 5);
 		
 		boolean booleanInt = (izq.getType() == 5) && (der.getType() == 0);
@@ -1076,6 +1142,7 @@ public class BinaryOperationExpression extends Expression {
 		boolean booleanLong = (izq.getType() == 5) && (der.getType() == 2);
 		boolean booleanFloat = (izq.getType() == 5) && (der.getType() == 1);
 		boolean booleanTuple = (izq.getType() == 5) && (der.getType() == 11);
+		boolean booleanList = (izq.getType() == 5) && (der.getType() == 6);
 		boolean booleanBoolean = (izq.getType() == 5) && (der.getType() == 5);
 		
 		boolean tupleInt = (izq.getType() == 11) && (der.getType() == 0);
@@ -1084,6 +1151,15 @@ public class BinaryOperationExpression extends Expression {
 		boolean tupleBoolean = (izq.getType() == 11) && (der.getType() == 5);
 		boolean tupleFloat = (izq.getType() == 11) && (der.getType() == 1);
 		boolean tupleTuple = (izq.getType() == 11) && (der.getType() == 11);
+		boolean tupleList = (izq.getType() == 11) && (der.getType() == 6);
+		
+		boolean listInt = (izq.getType() == 6) && (der.getType() == 0);
+		boolean listString = (izq.getType() == 6) && (der.getType() == 3);
+		boolean listLong = (izq.getType() == 6) && (der.getType() == 2);
+		boolean listBoolean = (izq.getType() == 6) && (der.getType() == 5);
+		boolean listFloat = (izq.getType() == 6) && (der.getType() == 1);
+		boolean listTuple = (izq.getType() == 6) && (der.getType() == 11);
+		boolean listList = (izq.getType() == 6) && (der.getType() == 6);
 		
 		if(intInt){
 			int intDer = ((IntegerType)der).getValue();
@@ -1134,6 +1210,14 @@ public class BinaryOperationExpression extends Expression {
 				res = new IntegerType(0);
 			else
 				res = new TupleType(tupleDer);
+			
+		}else if(intList){
+			int intIzq = ((IntegerType)izq).getValue();
+			ArrayList<Type> listDer = ((ListType)der).getList();
+			if(intIzq == 0)
+				res = new IntegerType(0);
+			else
+				res = new ListType(listDer);
 			
 		}
 		else if(stringInt){
@@ -1187,6 +1271,15 @@ public class BinaryOperationExpression extends Expression {
 				res = new StringType(stringIzq);
 			else
 				res = new TupleType(tupleDer);
+			
+		}
+		else if(stringList){
+			ArrayList<Type> listDer = ((ListType)der).getList();
+			String stringIzq = ((StringType)izq).getText();
+			if(stringIzq.isEmpty())
+				res = new StringType(stringIzq);
+			else
+				res = new ListType(listDer);
 			
 		}
 		else if(longInt){
@@ -1241,6 +1334,14 @@ public class BinaryOperationExpression extends Expression {
 			else
 				res = new TupleType(tupleDer);
 		}
+		else if(longTuple){
+			long longIzq = ((LongType)izq).getValue();
+			ArrayList<Type> listDer = ((ListType)der).getList();
+			if(longIzq == 0)
+				res = new LongType(0);
+			else
+				res = new ListType(listDer);
+		}
 		else if(floatInt){
 			float floatIzq = ((FloatType)izq).getValue();
 			int intDer = ((IntegerType)der).getValue();
@@ -1292,6 +1393,14 @@ public class BinaryOperationExpression extends Expression {
 				res = new FloatType(0);
 			else
 				res = new TupleType(tupleDer);
+		}
+		else if(floatList){
+			float floatIzq = ((FloatType)izq).getValue();
+			ArrayList<Type> listDer = ((ListType)der).getList();
+			if (floatIzq == 0)
+				res = new FloatType(0);
+			else
+				res = new ListType(listDer);
 		}
 		else if(booleanInt){
 			int intDer = ((IntegerType)der).getValue();
@@ -1345,6 +1454,14 @@ public class BinaryOperationExpression extends Expression {
 			else
 				res = new TupleType(tupleDer);
 		}
+		else if (booleanList){
+			ArrayList<Type> listDer = ((ListType)der).getList();
+			boolean booleanIzq = ((BooleanType)izq).getValue();
+			if (!booleanIzq)
+				res = new BooleanType(false);
+			else
+				res = new ListType(listDer);
+		}
 		else if(tupleInt){
 			int intDer = ((IntegerType)der).getValue();
 			ArrayList<Type> tupleIzq = ((TupleType)izq).getTuple();
@@ -1397,6 +1514,74 @@ public class BinaryOperationExpression extends Expression {
 			else
 				res = new TupleType(tupleDer);
 		}
+		else if (tupleList){
+			ArrayList<Type> listDer = ((ListType)der).getList();
+			ArrayList<Type> tupleIzq = ((TupleType)izq).getTuple();
+			if (tupleIzq.isEmpty())
+				res = new TupleType(tupleIzq);
+			else
+				res = new ListType(listDer);
+		}
+		else if(listInt){
+			int intDer = ((IntegerType)der).getValue();
+			ArrayList<Type> listIzq = ((ListType)izq).getList();
+			if (listIzq.isEmpty())
+				res = new ListType(listIzq);
+			else
+				res = new IntegerType(intDer);
+
+		}
+		else if(listLong){
+			long longDer = ((LongType)der).getValue();
+			ArrayList<Type> listIzq = ((ListType)izq).getList();
+			if (listIzq.isEmpty())
+				res = new ListType(listIzq);
+			else
+				res = new LongType(longDer);
+
+		}
+		else if(listFloat){
+			float floatDer = ((FloatType)der).getValue();
+			ArrayList<Type> listIzq = ((ListType)izq).getList();
+			if (listIzq.isEmpty())
+				res = new ListType(listIzq);
+			else
+				res = new FloatType(floatDer);
+
+		}
+		else if(listBoolean){
+			boolean booleanDer = ((BooleanType)der).getValue();
+			ArrayList<Type> listIzq = ((ListType)izq).getList();
+			if (listIzq.isEmpty())
+				res = new ListType(listIzq);
+			else
+				res = new BooleanType(booleanDer);
+
+		}
+		else if (listString){
+			String stringDer = ((StringType)der).getText();
+			ArrayList<Type> listIzq = ((ListType)izq).getList();
+			if (listIzq.isEmpty())
+				res = new ListType(listIzq);
+			else
+				res = new StringType(stringDer);
+		}
+		else if (listList){
+			ArrayList<Type> listDer = ((ListType)der).getList();
+			ArrayList<Type> listIzq = ((ListType)izq).getList();
+			if (listIzq.isEmpty())
+				res = new ListType(listIzq);
+			else
+				res = new ListType(listDer);
+		}
+		else if (listTuple){
+			ArrayList<Type> tupleDer = ((TupleType)der).getTuple();
+			ArrayList<Type> listIzq = ((ListType)izq).getList();
+			if (listIzq.isEmpty())
+				res = new ListType(listIzq);
+			else
+				res = new TupleType(tupleDer);
+		}
 	    else {
             throw new CompilerException(lineNumber, "Tipos de datos no esperados para la operacion and");
 	    }
@@ -1413,6 +1598,7 @@ public class BinaryOperationExpression extends Expression {
 		boolean intFloat = (izq.getType() == 0) && (der.getType() == 1);
 		boolean intBoolean = (izq.getType() == 0) && (der.getType() == 5);
 		boolean intTuple = (izq.getType() == 0) && (der.getType() == 11);
+		boolean intList = (izq.getType() == 0) && (der.getType() == 6);
 		
 		boolean stringInt = (izq.getType() == 3) && (der.getType() == 0);
 		boolean stringString = (izq.getType() == 3) && (der.getType() == 3);
@@ -1420,6 +1606,7 @@ public class BinaryOperationExpression extends Expression {
 		boolean stringBoolean = (izq.getType() == 3) && (der.getType() == 5);
 		boolean stringFloat = (izq.getType() == 3) && (der.getType() == 1);
 		boolean stringTuple = (izq.getType() == 3) && (der.getType() == 11);
+		boolean stringList = (izq.getType() == 3) && (der.getType() == 6);
 		
 		boolean longInt = (izq.getType() == 2) && (der.getType() == 0);
 		boolean longString = (izq.getType() == 2) && (der.getType() == 3);
@@ -1427,6 +1614,7 @@ public class BinaryOperationExpression extends Expression {
 		boolean longFloat = (izq.getType() == 2) && (der.getType() == 1);
 		boolean longBoolean = (izq.getType() == 2) && (der.getType() == 5);
 		boolean longTuple = (izq.getType() == 2) && (der.getType() == 11);
+		boolean longList = (izq.getType() == 2) && (der.getType() == 6);
 		
 		boolean floatInt = (izq.getType() == 1) && (der.getType() == 0);
 		boolean floatString = (izq.getType() == 1) && (der.getType() == 3);
@@ -1434,6 +1622,7 @@ public class BinaryOperationExpression extends Expression {
 		boolean floatFloat = (izq.getType() == 1) && (der.getType() == 1);
 		boolean floatBoolean = (izq.getType() == 1) && (der.getType() == 5);
 		boolean floatTuple = (izq.getType() == 1) && (der.getType() == 11);
+		boolean floatList = (izq.getType() == 1) && (der.getType() == 6);
 		
 		boolean booleanInt = (izq.getType() == 5) && (der.getType() == 0);
 		boolean booleanString = (izq.getType() == 5) && (der.getType() == 3);
@@ -1441,6 +1630,7 @@ public class BinaryOperationExpression extends Expression {
 		boolean booleanFloat = (izq.getType() == 5) && (der.getType() == 1);
 		boolean booleanBoolean = (izq.getType() == 5) && (der.getType() == 5);
 		boolean booleanTuple = (izq.getType() == 5) && (der.getType() == 11);
+		boolean booleanList = (izq.getType() == 5) && (der.getType() == 6);
 		
 		boolean tupleInt = (izq.getType() == 11) && (der.getType() == 0);
 		boolean tupleString = (izq.getType() == 11) && (der.getType() == 3);
@@ -1448,6 +1638,15 @@ public class BinaryOperationExpression extends Expression {
 		boolean tupleBoolean = (izq.getType() == 11) && (der.getType() == 5);
 		boolean tupleFloat = (izq.getType() == 11) && (der.getType() == 1);
 		boolean tupleTuple = (izq.getType() == 11) && (der.getType() == 11);
+		boolean tupleList = (izq.getType() == 11) && (der.getType() == 6);
+
+		boolean listInt = (izq.getType() == 6) && (der.getType() == 0);
+		boolean listString = (izq.getType() == 6) && (der.getType() == 3);
+		boolean listLong = (izq.getType() == 6) && (der.getType() == 2);
+		boolean listBoolean = (izq.getType() == 6) && (der.getType() == 5);
+		boolean listFloat = (izq.getType() == 6) && (der.getType() == 1);
+		boolean listTuple = (izq.getType() == 6) && (der.getType() == 11);
+		boolean listList = (izq.getType() == 6) && (der.getType() == 6);
 		
 		if(intInt){
 			int intDer = ((IntegerType)der).getValue();
@@ -1498,6 +1697,15 @@ public class BinaryOperationExpression extends Expression {
 				res = new IntegerType(0);
 			else
 				res = new TupleType(tupleDer);
+			
+		}
+		else if(intList){
+			int intIzq = ((IntegerType)izq).getValue();
+			ArrayList<Type> listDer = ((ListType)der).getList();
+			if(intIzq != 0)
+				res = new IntegerType(0);
+			else
+				res = new ListType(listDer);
 			
 		}
 		else if(stringInt){
@@ -1553,6 +1761,15 @@ public class BinaryOperationExpression extends Expression {
 				res = new TupleType(tupleDer);
 			
 		}
+		else if(stringList){
+			ArrayList<Type> listDer = ((ListType)der).getList();
+			String stringIzq = ((StringType)izq).getText();
+			if(!stringIzq.isEmpty())
+				res = new StringType(stringIzq);
+			else
+				res = new ListType(listDer);
+			
+		}
 		else if(longInt){
 			long longIzq = ((LongType)izq).getValue();
 			int intDer = ((IntegerType)der).getValue();
@@ -1604,6 +1821,14 @@ public class BinaryOperationExpression extends Expression {
 				res = new LongType(0);
 			else
 				res = new TupleType(tupleDer);
+		}
+		else if(longList){
+			long longIzq = ((LongType)izq).getValue();
+			ArrayList<Type> listDer = ((ListType)der).getList();
+			if(longIzq != 0)
+				res = new LongType(0);
+			else
+				res = new ListType(listDer);
 		}
 		else if(floatInt){
 			float floatIzq = ((FloatType)izq).getValue();
@@ -1657,6 +1882,14 @@ public class BinaryOperationExpression extends Expression {
 			else
 				res = new TupleType(tupleDer);
 		}
+		else if(floatList){
+			float floatIzq = ((FloatType)izq).getValue();
+			ArrayList<Type> listDer = ((ListType)der).getList();
+			if (floatIzq != 0)
+				res = new FloatType(0);
+			else
+				res = new ListType(listDer);
+		}
 		else if(booleanInt){
 			int intDer = ((IntegerType)der).getValue();
 			boolean booleanIzq = ((BooleanType)izq).getValue();
@@ -1708,6 +1941,14 @@ public class BinaryOperationExpression extends Expression {
 				res = new BooleanType(true);
 			else
 				res = new TupleType(tupleDer);
+		}
+		else if (booleanList){
+			ArrayList<Type> listDer = ((ListType)der).getList();
+			boolean booleanIzq = ((BooleanType)izq).getValue();
+			if (booleanIzq)
+				res = new BooleanType(true);
+			else
+				res = new ListType(listDer);
 		}
 		else if(tupleInt){
 			int intDer = ((IntegerType)der).getValue();
@@ -1761,6 +2002,74 @@ public class BinaryOperationExpression extends Expression {
 			else
 				res = new TupleType(tupleDer);
 		}
+		else if (tupleList){
+			ArrayList<Type> listDer = ((ListType)der).getList();
+			ArrayList<Type> tupleIzq = ((TupleType)izq).getTuple();
+			if (!tupleIzq.isEmpty())
+				res = new TupleType(tupleIzq);
+			else
+				res = new ListType(listDer);
+		}
+		else if(listInt){
+			int intDer = ((IntegerType)der).getValue();
+			ArrayList<Type> listIzq = ((ListType)izq).getList();
+			if (!listIzq.isEmpty())
+				res = new ListType(listIzq);
+			else
+				res = new IntegerType(intDer);
+
+		}
+		else if(listLong){
+			long longDer = ((LongType)der).getValue();
+			ArrayList<Type> listIzq = ((ListType)izq).getList();
+			if (!listIzq.isEmpty())
+				res = new ListType(listIzq);
+			else
+				res = new LongType(longDer);
+
+		}
+		else if(listFloat){
+			float floatDer = ((FloatType)der).getValue();
+			ArrayList<Type> listIzq = ((ListType)izq).getList();
+			if (!listIzq.isEmpty())
+				res = new ListType(listIzq);
+			else
+				res = new FloatType(floatDer);
+
+		}
+		else if(listBoolean){
+			boolean booleanDer = ((BooleanType)der).getValue();
+			ArrayList<Type> listIzq = ((ListType)izq).getList();
+			if (!listIzq.isEmpty())
+				res = new ListType(listIzq);
+			else
+				res = new BooleanType(booleanDer);
+
+		}
+		else if (listString){
+			String stringDer = ((StringType)der).getText();
+			ArrayList<Type> listIzq = ((ListType)izq).getList();
+			if (!listIzq.isEmpty())
+				res = new ListType(listIzq);
+			else
+				res = new StringType(stringDer);
+		}
+		else if (listList){
+			ArrayList<Type> listDer = ((ListType)der).getList();
+			ArrayList<Type> listIzq = ((ListType)izq).getList();
+			if (!listIzq.isEmpty())
+				res = new ListType(listIzq);
+			else
+				res = new ListType(listDer);
+		}
+		else if (listTuple){
+			ArrayList<Type> tupleDer = ((TupleType)der).getTuple();
+			ArrayList<Type> listIzq = ((ListType)izq).getList();
+			if (!listIzq.isEmpty())
+				res = new ListType(listIzq);
+			else
+				res = new TupleType(tupleDer);
+		}
 	    else {
             throw new CompilerException(lineNumber, "Tipos de datos no esperados para la operacion or");
 	    }
@@ -1775,6 +2084,7 @@ public class BinaryOperationExpression extends Expression {
 		boolean intLong = (izq.getType() == 0) && (der.getType() == 2);
 		boolean intFloat = (izq.getType() == 0) && (der.getType() == 1);
 		boolean intTuple = (izq.getType() == 0) && (der.getType() == 11);
+		boolean intList = (izq.getType() == 0) && (der.getType() == 6);
 		boolean intBoolean = (izq.getType() == 0) && (der.getType() == 5);
 		
 		boolean stringInt = (izq.getType() == 3) && (der.getType() == 0);
@@ -1783,12 +2093,14 @@ public class BinaryOperationExpression extends Expression {
 		boolean stringBoolean = (izq.getType() == 3) && (der.getType() == 5);
 		boolean stringFloat = (izq.getType() == 3) && (der.getType() == 1);
 		boolean stringTuple = (izq.getType() == 3) && (der.getType() == 11);
+		boolean stringList = (izq.getType() == 3) && (der.getType() == 6);
 		
 		boolean longInt = (izq.getType() == 2) && (der.getType() == 0);
 		boolean longString = (izq.getType() == 2) && (der.getType() == 3);
 		boolean longLong = (izq.getType() == 2) && (der.getType() == 3);
 		boolean longFloat = (izq.getType() == 2) && (der.getType() == 1);
 		boolean longTuple = (izq.getType() == 2) && (der.getType() == 11);
+		boolean longList = (izq.getType() == 2) && (der.getType() == 6);
 		boolean longBoolean = (izq.getType() == 2) && (der.getType() == 5);
 		
 		boolean floatInt = (izq.getType() == 1) && (der.getType() == 0);
@@ -1796,6 +2108,7 @@ public class BinaryOperationExpression extends Expression {
 		boolean floatLong = (izq.getType() == 1) && (der.getType() == 2);
 		boolean floatFloat = (izq.getType() == 1) && (der.getType() == 1);
 		boolean floatTuple = (izq.getType() == 1) && (der.getType() == 11);
+		boolean floatList = (izq.getType() == 1) && (der.getType() == 6);
 		boolean floatBoolean = (izq.getType() == 1) && (der.getType() == 5);
 		
 		boolean booleanInt = (izq.getType() == 5) && (der.getType() == 0);
@@ -1804,6 +2117,7 @@ public class BinaryOperationExpression extends Expression {
 		boolean booleanFloat = (izq.getType() == 5) && (der.getType() == 1);
 		boolean booleanBoolean = (izq.getType() == 5) && (der.getType() == 5);
 		boolean booleanTuple = (izq.getType() == 5) && (der.getType() == 11);
+		boolean booleanList = (izq.getType() == 5) && (der.getType() == 6);
 		
 		boolean tupleInt = (izq.getType() == 11) && (der.getType() == 0);
 		boolean tupleString = (izq.getType() == 11) && (der.getType() == 3);
@@ -1811,6 +2125,15 @@ public class BinaryOperationExpression extends Expression {
 		boolean tupleBoolean = (izq.getType() == 11) && (der.getType() == 5);
 		boolean tupleFloat = (izq.getType() == 11) && (der.getType() == 1);
 		boolean tupleTuple = (izq.getType() == 11) && (der.getType() == 11);
+		boolean tupleList = (izq.getType() == 11) && (der.getType() == 6);
+		
+		boolean listInt = (izq.getType() == 6) && (der.getType() == 0);
+		boolean listString = (izq.getType() == 6) && (der.getType() == 3);
+		boolean listLong = (izq.getType() == 6) && (der.getType() == 2);
+		boolean listBoolean = (izq.getType() == 6) && (der.getType() == 5);
+		boolean listFloat = (izq.getType() == 6) && (der.getType() == 1);
+		boolean listTuple = (izq.getType() == 6) && (der.getType() == 11);
+		boolean listList = (izq.getType() == 6) && (der.getType() == 6);
 		
 		if(intInt){
 			boolean resultado = ((IntegerType)izq).getValue() == ((IntegerType)der).getValue();

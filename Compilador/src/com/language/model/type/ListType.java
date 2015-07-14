@@ -4,16 +4,16 @@ import java.util.ArrayList;
 import com.language.model.type.Type;
 import com.language.model.type.TypeEnum;
 
-public class ArrayType extends Type {
+public class ListType extends Type {
 	
 	private ArrayList<Type> list;
 	
-	public ArrayType() {
+	public ListType() {
 		list = new ArrayList<Type>();
 		
 	}
 
-	public ArrayType(ArrayList<Type> list){
+	public ListType(ArrayList<Type> list){
         this.list = list;
     }
 
@@ -26,7 +26,7 @@ public class ArrayType extends Type {
     }
 
     public int getType(){
-        return 6;   //6-TypeArray
+        return 6;   //6-TypeList
     }
 
     public void print(){
@@ -58,14 +58,14 @@ public class ArrayType extends Type {
 		return false;
 	}
 	
-	public boolean equals(ArrayType obj) {
+	public boolean equals(ListType obj) {
 		if (this == obj)
 			return true;
 		if (!super.equals(obj))
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		ArrayType other = (ArrayType) obj;
+		ListType other = (ListType) obj;
 		if (list == null) {
 			if (other.list != null)
 				return false;

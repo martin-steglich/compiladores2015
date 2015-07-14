@@ -4,14 +4,14 @@ import java.util.ArrayList;
 
 
 import com.language.exceptions.CompilerException;
-import com.language.model.type.ArrayType;
+import com.language.model.type.ListType;
 import com.language.model.type.Type;
 
-public class ArrayExpression  extends Expression {
+public class ListExpression  extends Expression {
 	ArrayList<Type> elements;
 	int lineNumber;
 	
-	public ArrayExpression(ArrayList<Expression> elements) throws CompilerException {
+	public ListExpression(ArrayList<Expression> elements) throws CompilerException {
 		this.elements = new ArrayList<>();
 		for (Expression e : elements)
 		{
@@ -33,7 +33,7 @@ public class ArrayExpression  extends Expression {
 	
 	@Override
 	public Type evaluate() {
-		ArrayType arr = new ArrayType(elements);
+		ListType arr = new ListType(elements);
 		
 		return arr;
 	}

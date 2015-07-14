@@ -57,8 +57,8 @@ public abstract class Type {
 			return ((BooleanType)this).equals((BooleanType)type);
 
 		//TODO descomentar esto
-		if(this instanceof ArrayType)
-			return ((ArrayType)this).equals((ArrayType)type);
+		if(this instanceof ListType)
+			return ((ListType)this).equals((ListType)type);
 		
 //		if(this instanceof FunctionType)
 //			return false;
