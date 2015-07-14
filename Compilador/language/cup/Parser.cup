@@ -10,6 +10,22 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Collections;
 
+parser code {:
+	public void syntax_error(Symbol s){
+		//int line = s.left + 1;
+		//int column = s.right + 1;
+		int line = s.left;
+		int column = s.right;
+		if(s.value==null) {
+			throw new ParsingException(line, "Sintaxis incorrecta");
+		} else {
+			throw new ParsingException(line, column, "Sintaxis incorrecta: " + s.value);
+		}
+	}
+
+	public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{
+	}
+:}
 
 action code {:
 
@@ -151,13 +167,11 @@ simple_statement ::= expression:e {: RESULT = e; :}
 					 | CONTINUE :c {: setContinueFlag(true);
 									  RESULT = new ContinueStatement(cleft); :}
 					 | ID:i LEFTRECT expression:k RIGHTRECT ASSIGN expression:e {: IdentifierExpression id = new IdentifierExpression(i, ileft);
-					 																RESULT = new AssignStructuredTypeStatement(id, e, k, ileft);
+					 															   RESULT = new AssignStructuredTypeStatement(id, e, k, ileft);
+					 															:}
 					 | RETURN expression_list_list:list {:	setReturnFlag(true); 
 					 									   	RESULT = new ReturnStatement((List<Expression>) list, 0);
-					 									:}  
-					 | ID:i LEFTRECT expression:k RIGHTRECT ASSIGN expression:e {: IdentifierExpression id = new IdentifierExpression(i);
-					 																RESULT = new AssignStructuredTypeStatement(id, e, k);
-					 															:};
+					 									:};
 
 expression ::= INTEGER:i {: RESULT = new IntegerExpression(Integer.valueOf(i), ileft); :}
 			| STRING:s {: RESULT = new StringExpression(s, sleft); :}
@@ -281,7 +295,7 @@ compound_statement ::= IF expression:e COLON block:i ELSE COLON block:b {: RESUL
 					   										 RESULT = new WhileStatement(e, (List<Statement>) b, eleft); 
 					   									  :}
 					   | DEF ID:i function_parameters:list COLON block:b {:  setReturnFlag(false);
-					   														 IdentifierExpression id = new IdentifierExpression(i);
+					   														 IdentifierExpression id = new IdentifierExpression(i, ileft);
 					   			 											 RESULT = new FunctionStatement(id, (List<IdentifierExpression>) list, (List<Statement>) b);
 					   													 :};
 					   
@@ -321,11 +335,11 @@ statement_list ::= statement_list:list statement:stmt {:((List<Statement>)list).
 
 function_parameters ::= LEFTPARENTHESE function_parameters_list:list RIGHTPARENTHESE {: RESULT = list; :};
 
-function_parameters_list ::= ID:i COMMA function_parameters_list:list {: ((ArrayList<IdentifierExpression>)list).add(new IdentifierExpression(i));
+function_parameters_list ::= ID:i COMMA function_parameters_list:list {: ((ArrayList<IdentifierExpression>)list).add(new IdentifierExpression(i,ileft));
 																		 RESULT = list;
 																	  :}
 							 | ID:i {: ArrayList<IdentifierExpression> list = new ArrayList<>();
-									   list.add(new IdentifierExpression(i));
+									   list.add(new IdentifierExpression(i,ileft));
 									   RESULT = list;
 									:}
 							 | {: RESULT = new ArrayList<IdentifierExpression>(); :};
