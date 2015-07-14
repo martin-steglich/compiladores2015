@@ -235,19 +235,19 @@ expression_tuple_list ::= expression:e COMMA expression_tuple_list:list {: ((Arr
 									   :}
 						| /* epsilon */ {: RESULT = new ArrayList<Expression>(); :};
 
-list_expression ::= LEFTRECT expression:e COMMA expression_list_list:list RIGHTRECT {: ((ArrayList<Expression>)list).add(0,e); 
-																									RESULT = new TupleExpression((ArrayList<Expression>)list); 
+list_expression ::= LEFTRECT expression:e COMMA expression_list_list:list RIGHTRECT {: ((ArrayList<Expression>)list).add(e); 
+																									RESULT = new ArrayExpression((ArrayList<Expression>)list); 
 																								  :}
-					| LEFTRECT RIGHTRECT {: ArrayList<Expression> tuple = new ArrayList<>();
-														RESULT = new TupleExpression(tuple);
+					| LEFTRECT RIGHTRECT {: ArrayList<Expression> list = new ArrayList<>();
+														RESULT = new ArrayExpression(list);
 													 :};
 
-expression_list_list ::= expression:e COMMA expression_list_list:list {: ((ArrayList<Expression>)list).add(0,e);
+expression_list_list ::= expression:e COMMA expression_list_list:list {: ((ArrayList<Expression>)list).add(e);
 																		    RESULT = list;
 																		:}
-						| expression:e {: ArrayList<Expression> tuple = new ArrayList<>();
-										  tuple.add(0,e);
-										  RESULT = tuple;
+						| expression:e {: ArrayList<Expression> lista = new ArrayList<>();
+										  lista.add(e);
+										  RESULT = lista;
 									   :};
 
 
