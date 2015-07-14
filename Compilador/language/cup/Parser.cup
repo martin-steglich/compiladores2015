@@ -75,7 +75,7 @@ terminal String LEFTLLAVE, RIGHTLLAVE, LEFTRECT, RIGHTRECT;
 non terminal program, module;
 non terminal statement_newline_list, simple_statement_list, simple_statement, compound_statement;
 non terminal stmt_list, simple_stmt_semicolon_list, statement, statement_list, identifier_comma_list;
-non terminal Expression expression, simple_expression, map_expression, tuple_expression, list_expression;
+non terminal Expression expression, map_expression, tuple_expression, list_expression;
 non terminal expression_map_list, expression_tuple_list, expression_list_list;
 non terminal block;
 
@@ -138,13 +138,13 @@ simple_statement ::= expression:e {: RESULT = e; :}
 					 															:};
 
 expression ::= INTEGER:i {: RESULT = new IntegerExpression(Integer.valueOf(i)); :}
-					| STRING:s {: RESULT = new StringExpression(s); :}
-					| LONG:l {: RESULT = new LongExpression(l); :}
-					| FLOAT:f {: RESULT = new FloatExpression(Float.valueOf(f)); :}
-					| TRUE:b {: RESULT = new BooleanExpression(true); :}
-					| FALSE:b {: RESULT = new BooleanExpression(false); :}	
-					| ID:i {: RESULT = new IdentifierExpression(i); :}
-					| LEFTPARENTHESE expression:e RIGHTPARENTHESE {: RESULT = e; :}
+			| STRING:s {: RESULT = new StringExpression(s); :}
+			| LONG:l {: RESULT = new LongExpression(l); :}
+			| FLOAT:f {: RESULT = new FloatExpression(Float.valueOf(f)); :}
+			| TRUE:b {: RESULT = new BooleanExpression(true); :}
+			| FALSE:b {: RESULT = new BooleanExpression(false); :}	
+			| ID:i {: RESULT = new IdentifierExpression(i); :}
+			| LEFTPARENTHESE expression:e RIGHTPARENTHESE {: RESULT = e; :}
 			| expression:l PLUS expression:r {: RESULT = new BinaryOperationExpression((Expression)l, "+", (Expression)r) ;:}
 			| expression:l MINUS expression:r {: RESULT = new BinaryOperationExpression((Expression)l, "-", (Expression)r) ;:}
 			| expression:l DIV expression:r {: RESULT = new BinaryOperationExpression((Expression)l, "/", (Expression)r) ;:}
@@ -170,6 +170,7 @@ expression ::= INTEGER:i {: RESULT = new IntegerExpression(Integer.valueOf(i)); 
 			| NOT expression:e {: RESULT = new UnaryOperationExpression("not", (Expression)e); :}
 			| tuple_expression:e {: RESULT = e; :}
 			| map_expression:e {: RESULT = e; :}
+			| list_expression:e {: RESULT = e; :}
 			| ID:i LEFTRECT expression:e RIGHTRECT {:	IdentifierExpression id = new IdentifierExpression(i); 
 											   			RESULT = new StructuredTypePositionExpression(id, e, null);
 											   	   :}
@@ -196,8 +197,7 @@ expression ::= INTEGER:i {: RESULT = new IntegerExpression(Integer.valueOf(i)); 
 											   	   					  					 :}
 			| ID:i LEFTRECT expression:s COLON expression:e COLON expression:f RIGHTRECT {: IdentifierExpression id = new IdentifierExpression(i); 
 											   							 					RESULT = new StructuredTypePositionExpression(id, s, e);
-											   	   					  					 :}
-			| list_expression:e {: RESULT = e; :};
+											   	   					  					 :};
 
 
 map_expression ::= LEFTLLAVE expression_map_list:list RIGHTLLAVE {: RESULT = new DictionaryExpression((Map<Expression,Expression>)list); :}
@@ -235,7 +235,7 @@ expression_tuple_list ::= expression:e COMMA expression_tuple_list:list {: ((Arr
 									   :}
 						| /* epsilon */ {: RESULT = new ArrayList<Expression>(); :};
 
-list_expression ::= LEFTRECT expression:e COMMA expression_tuple_list:list RIGHTRECT {: ((ArrayList<Expression>)list).add(0,e); 
+list_expression ::= LEFTRECT expression:e COMMA expression_list_list:list RIGHTRECT {: ((ArrayList<Expression>)list).add(0,e); 
 																									RESULT = new TupleExpression((ArrayList<Expression>)list); 
 																								  :}
 					| LEFTRECT RIGHTRECT {: ArrayList<Expression> tuple = new ArrayList<>();
