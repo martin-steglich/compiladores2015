@@ -11,6 +11,8 @@ print a[:]
 print a[::2]
 print a[:4:1]
 print a[4::3]
+a[0] = "hola"
+print a[:]
 print "tupla"
 print b[-3]
 print b[3]
