@@ -7,10 +7,10 @@ import com.language.exceptions.CompilerException;
 import com.language.model.expression.Expression;
 import com.language.model.expression.IdentifierExpression;
 import com.language.model.stack.StackHandler;
-import com.language.model.type.ArrayType;
 import com.language.model.type.BooleanType;
 import com.language.model.type.DictionaryType;
 import com.language.model.type.IntegerType;
+import com.language.model.type.ListType;
 import com.language.model.type.LongType;
 import com.language.model.type.Type;
 
@@ -60,7 +60,7 @@ public class AssignStructuredTypeStatement extends Statement {
 				pos = new LongType(start);
 			}
 			
-			ArrayList<Type> list = ((ArrayType)estructuredType).getList();
+			ArrayList<Type> list = ((ListType)estructuredType).getList();
 			if ( ((LongType)pos).getValue() < (long)list.size()){
 				list.remove(((LongType)pos).getValue());
 				int index = (int)((LongType)pos).getValue();
