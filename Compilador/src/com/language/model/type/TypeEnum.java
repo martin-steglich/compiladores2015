@@ -13,8 +13,8 @@ public enum TypeEnum {
 	CONTINUE(8), /**/
 	FUNCTION(9),
 	DICT(10),
-	TUPLE(11); /**/
-
+	TUPLE(11), /**/
+	RETURN(12);
 	int value;
 
 	TypeEnum(int value) {
@@ -58,6 +58,9 @@ public enum TypeEnum {
 			break;
 		case 11:
 			name = "tuple";
+			break;
+		case 12:
+			name = "return";
 			break;
 		}
 		

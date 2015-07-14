@@ -331,6 +331,10 @@ SIMPLE_QUOTE_TRIPLE_STRING: '''EJEMPLO'''
 								System.out.println("CONTINUE");
 								return symbol(sym.CONTINUE);
 							}
+	"return"				{
+								System.out.println("RETURN");
+								return symbol(sym.RETURN);
+							}
 	"def"					{ 
 								System.out.println("DEF");
 								return symbol(sym.DEF); 

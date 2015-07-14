@@ -13,6 +13,10 @@ import java.util.Collections;
 
 action code {:
 
+	private boolean returnFlag;
+	private int returnLine = 0;
+	private int returnColumn = 0;
+
 	private boolean breakFlag;
 	private int breakLine = 0;
 	private int breakColumn = 0;
@@ -20,6 +24,12 @@ action code {:
 	private boolean continueFlag;
 	private int continueLine = 0;
 	private int continueColumn = 0;
+	
+	public void setReturnFlag(boolean value) {
+		returnFlag = value;
+		//returnLine = line;
+		//returnColumn = column;
+	}
 	
 	public void setBreakFlag(boolean value) {
 		breakFlag = value;
@@ -32,6 +42,12 @@ action code {:
 		//continueLine = line;
 		//continueColumn = column;
 	}
+	
+	public void checkReturnErrors() {
+		if (returnFlag) { 
+			throw new ParsingException(returnLine, returnColumn, "Sintaxis incorrecta: return");
+		}
+	}
 
 	public void checkBreakContinueErrors() {
 		if (breakFlag) {
@@ -43,9 +59,7 @@ action code {:
 	}
 	
  :}; 
-
-
-
+ 
 
 terminal String ID, INTEGER, LONG, FLOAT, STRING, TRUE, FALSE;
 
@@ -71,13 +85,16 @@ terminal String BREAK, CONTINUE;
 
 terminal String LEFTLLAVE, RIGHTLLAVE, LEFTRECT, RIGHTRECT;
 
+terminal String RETURN;
+
 
 non terminal program, module;
 non terminal statement_newline_list, simple_statement_list, simple_statement, compound_statement;
-non terminal stmt_list, simple_stmt_semicolon_list, statement, statement_list, identifier_comma_list;
+non terminal stmt_list, simple_stmt_semicolon_list, statement, statement_list;
 non terminal Expression expression, map_expression, tuple_expression, list_expression;
 non terminal expression_map_list, expression_tuple_list, expression_list_list;
 non terminal block;
+non terminal function_parameters, function_parameters_list;
 
 precedence left IF, ELSE;
 precedence left ASSIGN;
@@ -85,7 +102,7 @@ precedence left PLUS, MINUS;
 precedence left MUL, DIV, EXP, INT_DIV, MOD;
 precedence left AND, OR, EQUALS, NOT_EQUALS, LESS_THAN, GREAT_THAN, LESSEQUAL_THAN, GREATEQUAL_THAN;
 precedence left AND_BIT, OR_BIT, XOR_BIT, LSHIFT_BIT, RSHIFT_BIT;
-precedence right ID, LEFTRECT;
+precedence right ID, LEFTRECT, LEFTPARENTHESE;
 
 
 program	::=	module:list {: 
@@ -135,6 +152,11 @@ simple_statement ::= expression:e {: RESULT = e; :}
 									  RESULT = new ContinueStatement(cleft); :}
 					 | ID:i LEFTRECT expression:k RIGHTRECT ASSIGN expression:e {: IdentifierExpression id = new IdentifierExpression(i, ileft);
 					 																RESULT = new AssignStructuredTypeStatement(id, e, k, ileft);
+					 | RETURN expression_list_list:list {:	setReturnFlag(true); 
+					 									   	RESULT = new ReturnStatement((List<Expression>) list, 0);
+					 									:}  
+					 | ID:i LEFTRECT expression:k RIGHTRECT ASSIGN expression:e {: IdentifierExpression id = new IdentifierExpression(i);
+					 																RESULT = new AssignStructuredTypeStatement(id, e, k);
 					 															:};
 
 expression ::= INTEGER:i {: RESULT = new IntegerExpression(Integer.valueOf(i), ileft); :}
@@ -258,8 +280,10 @@ compound_statement ::= IF expression:e COLON block:i ELSE COLON block:b {: RESUL
 															 setBreakFlag(false); 
 					   										 RESULT = new WhileStatement(e, (List<Statement>) b, eleft); 
 					   									  :}
-					   | DEF ID LEFTPARENTHESE RIGHTPARENTHESE COLON block
-					   | DEF ID LEFTPARENTHESE ID identifier_comma_list RIGHTPARENTHESE COLON block;
+					   | DEF ID:i function_parameters:list COLON block:b {:  setReturnFlag(false);
+					   														 IdentifierExpression id = new IdentifierExpression(i);
+					   			 											 RESULT = new FunctionStatement(id, (List<IdentifierExpression>) list, (List<Statement>) b);
+					   													 :};
 					   
 stmt_list ::= simple_statement:stmt simple_stmt_semicolon_list:list {: 	((List<Statement>)list).add((Statement)stmt); 
 																		RESULT = list;
@@ -294,6 +318,16 @@ statement_list ::= statement_list:list statement:stmt {:((List<Statement>)list).
 										list.addAll((List<Statement>)stmt);
 										RESULT = list;
 									  :};
-									  
-identifier_comma_list ::= COMMA ID identifier_comma_list
-						  | /*epsilon*/;
+
+function_parameters ::= LEFTPARENTHESE function_parameters_list:list RIGHTPARENTHESE {: RESULT = list; :};
+
+function_parameters_list ::= ID:i COMMA function_parameters_list:list {: ((ArrayList<IdentifierExpression>)list).add(new IdentifierExpression(i));
+																		 RESULT = list;
+																	  :}
+							 | ID:i {: ArrayList<IdentifierExpression> list = new ArrayList<>();
+									   list.add(new IdentifierExpression(i));
+									   RESULT = list;
+									:}
+							 | {: RESULT = new ArrayList<IdentifierExpression>(); :};
+								  
+								  
