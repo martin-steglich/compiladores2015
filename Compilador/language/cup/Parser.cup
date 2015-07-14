@@ -173,32 +173,32 @@ expression ::= INTEGER:i {: RESULT = new IntegerExpression(Integer.valueOf(i)); 
 			| map_expression:e {: RESULT = e; :}
 			| list_expression:e {: RESULT = e; :}
 			| ID:i LEFTRECT expression:e RIGHTRECT {:	IdentifierExpression id = new IdentifierExpression(i); 
-											   			RESULT = new StructuredTypePositionExpression(id, e, null, null);
+											   			RESULT = new StructuredTypePositionExpression(id, e, null, null,false);
 											   	   :}
 			| ID:i LEFTRECT expression:s COLON RIGHTRECT {: IdentifierExpression id = new IdentifierExpression(i); 
-											   							 RESULT = new StructuredTypePositionExpression(id, s, null, null);
+											   							 RESULT = new StructuredTypePositionExpression(id, s, null, null,true);
 											   	   					  :}
 			| ID:i LEFTRECT  COLON expression:s RIGHTRECT {: IdentifierExpression id = new IdentifierExpression(i);
-															 		RESULT = new StructuredTypePositionExpression(id, null, s, null);
+															 		RESULT = new StructuredTypePositionExpression(id, null, s, null,true);
 											   	   					  :}
 			| ID:i LEFTRECT expression:s COLON expression:e RIGHTRECT {: IdentifierExpression id = new IdentifierExpression(i); 
 											   							
-											   							 RESULT = new StructuredTypePositionExpression(id, s, e, null);
+											   							 RESULT = new StructuredTypePositionExpression(id, s, e, null,true);
 											   	   					  :}
 			| ID:i LEFTRECT  COLON RIGHTRECT {: IdentifierExpression id = new IdentifierExpression(i); 
-											   							 				RESULT = new StructuredTypePositionExpression(id, null, null, null);
+											   							 				RESULT = new StructuredTypePositionExpression(id, null, null, null,true);
 											   	   					  					 :}
 			| ID:i LEFTRECT  COLON COLON expression:f RIGHTRECT {: IdentifierExpression id = new IdentifierExpression(i); 
-											   							 					RESULT = new StructuredTypePositionExpression(id, null, null, f);
+											   							 					RESULT = new StructuredTypePositionExpression(id, null, null, f,true);
 											   	   					  					 :}
 			| ID:i LEFTRECT  COLON expression:s COLON expression:f RIGHTRECT {: IdentifierExpression id = new IdentifierExpression(i); 
-											   							 					RESULT = new StructuredTypePositionExpression(id, null, s, f);
+											   							 					RESULT = new StructuredTypePositionExpression(id, null, s, f,true);
 											   	   					  					 :}
 			| ID:i LEFTRECT expression:s COLON COLON expression:f RIGHTRECT {: IdentifierExpression id = new IdentifierExpression(i); 
-											   							 					RESULT = new StructuredTypePositionExpression(id, s, null, f);
+											   							 					RESULT = new StructuredTypePositionExpression(id, s, null, f,true);
 											   	   					  					 :}
 			| ID:i LEFTRECT expression:s COLON expression:e COLON expression:f RIGHTRECT {: IdentifierExpression id = new IdentifierExpression(i); 
-											   							 					RESULT = new StructuredTypePositionExpression(id, s, e, f);
+											   							 					RESULT = new StructuredTypePositionExpression(id, s, e, f,true);
 											   	   					  					 :};
 
 

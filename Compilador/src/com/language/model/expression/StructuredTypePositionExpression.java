@@ -18,15 +18,18 @@ public class StructuredTypePositionExpression extends Expression{
 	Expression startPosition;
 	Expression endPosition;
 	Expression cantPos;
+	boolean tienePuntos;
 	int lineNumber;
 	
 	
 	
-	public StructuredTypePositionExpression(IdentifierExpression id, Expression startPosition, Expression endPosition, Expression cantPos) {
+	
+	public StructuredTypePositionExpression(IdentifierExpression id, Expression startPosition, Expression endPosition, Expression cantPos, boolean tienePuntos ) {
 		this.id = id;
 		this.startPosition = startPosition;
 		this.endPosition = endPosition; 
-		this.cantPos = cantPos; 
+		this.cantPos = cantPos;
+		this.tienePuntos = tienePuntos;
 //		this.lineNumber = lineNumber;
 	}
 
@@ -62,18 +65,18 @@ public class StructuredTypePositionExpression extends Expression{
 				
 				if(((LongType)startPos).getValue() >= size)
 					throw new CompilerException(lineNumber, "El indice de la lista esta fuera de rango");
-				if ((cantPos == null) && (endPosition == null)){
-					int index = (int)((LongType)startPos).getValue();
-					if (index < 0){
-						int index_abs = Math.abs(index);
-						if (index_abs <= size){
-							index = size - index_abs;
-						}else throw new CompilerException(lineNumber, "El indice de la lista esta fuera de rango");
-					}
-					Type ret = list.get(index);
-					return ret;
+				if ((cantPos == null) && (endPosition == null) && (!tienePuntos)){ //[N]
+						int index = (int)((LongType)startPos).getValue();
+						if (index < 0){
+							int index_abs = Math.abs(index);
+							if (index_abs <= size){
+								index = size - index_abs;
+							}else throw new CompilerException(lineNumber, "El indice de la lista esta fuera de rango");
+						}
+						Type ret = list.get(index);
+						return ret;					
 				}else{
-					if (endPosition != null){
+					if (endPosition != null){//[N:N..]
 						Type endPos = endPosition.evaluate();
 						if((endPos.getType() != 2) && (endPos.getType() != 0) && (endPos.getType() != 5))
 							throw new CompilerException(lineNumber, "El indice de las listas debe ser entero");
@@ -89,28 +92,28 @@ public class StructuredTypePositionExpression extends Expression{
 						if(((LongType)endPos).getValue() > size)
 							throw new CompilerException(lineNumber, "El indice de la lista esta fuera de rango");
 						ArrayList<Type> ListaRet = new ArrayList<>();
-						if (cantPos != null){
+						if (cantPos != null){ //[N:N:N]
 							int valPos = ((IntegerType)(cantPos.evaluate())).getValue();
 							for(long i = ((LongType)startPos).getValue(); i < ((LongType)endPos).getValue(); i= i + (long)valPos){
 								ListaRet.add(list.get((int)i));
 							}
-						}else{
+						}else{ //[N:N]
 							for(long i = ((LongType)startPos).getValue(); i < ((LongType)endPos).getValue(); i++){
 								ListaRet.add(list.get((int)i));
 							}
 						}
 						return new ListType(ListaRet);
 										
-					}else{
+					}else{ //[N:..]
 						ArrayList<Type> ListaRet = new ArrayList<>();
-						if (cantPos != null){
+						if (cantPos != null){ //[N::N]
 							int valPos = ((IntegerType)(cantPos.evaluate())).getValue();
 							for(long i = ((LongType)startPos).getValue(); i < size; i= i + (long)valPos){
 								ListaRet.add(list.get((int)i));
 							}
-						}else{
-							for(int i = ((IntegerType)startPos).getValue(); i < (int)size; i++){
-								ListaRet.add(list.get(i));
+						}else{ //[N:]
+							for(long i = ((LongType)startPos).getValue(); i < size; i++){
+								ListaRet.add(list.get((int)i));
 							}
 						}
 						return new ListType(ListaRet);
@@ -118,12 +121,12 @@ public class StructuredTypePositionExpression extends Expression{
 					
 				}
 			
-			}else{
+			}else{//[:..]
 				
 				ArrayList<Type> list = ((ListType)structuredType).getList();
 				int size = list.size();
 				ArrayList<Type> ListRet = new ArrayList<>();
-				if (endPosition != null){
+				if (endPosition != null){//[:N..]
 					Type endPos = endPosition.evaluate();
 					if((endPos.getType() != 2) && (endPos.getType() != 0) && (endPos.getType() != 5))
 						throw new CompilerException(lineNumber, "El indice de las listas debe ser entero");
@@ -138,23 +141,23 @@ public class StructuredTypePositionExpression extends Expression{
 					
 					if(((LongType)endPos).getValue() > size)
 						throw new CompilerException(lineNumber, "El indice de la tupla esta fuera de rango");		
-					if (cantPos != null){
+					if (cantPos != null){ //[:N:N]
 						int valPos = ((IntegerType)(cantPos.evaluate())).getValue();
 						for(int i = 0; i < ((LongType)endPos).getValue(); i= i + valPos){
 							ListRet.add(list.get((int)i));
 						}
-					}else{
+					}else{ //[:N]
 						for(int i = 0; i < ((LongType)endPos).getValue(); i++){
 							ListRet.add(list.get((int)i));
 						}
 					}
-				}else{
-					if (cantPos != null){
+				}else{ //[:..]
+					if (cantPos != null){ //[::N]
 						int valPos = ((IntegerType)(cantPos.evaluate())).getValue();
 						for(int i = 0; i < size; i= i + valPos){
 							ListRet.add(list.get((int)i));
 						}
-					}else{
+					}else{ //[:]
 						for(int i = 0; i < size; i++){
 							ListRet.add(list.get((int)i));
 						}
@@ -164,7 +167,7 @@ public class StructuredTypePositionExpression extends Expression{
 				return new ListType(ListRet);
 			}	
 		} else if(structuredType.getType() == 11){ //TUPLE
-			if (startPosition!= null){
+			if (startPosition!= null){ //[N:..]
 				Type startPos = startPosition.evaluate();
 				if((startPos.getType() != 2) && (startPos.getType() != 0) && (startPos.getType() != 5))
 					throw new CompilerException(lineNumber, "El indice de las tuplas debe ser entero");
@@ -181,7 +184,7 @@ public class StructuredTypePositionExpression extends Expression{
 				
 				if(((LongType)startPos).getValue() >= size)
 					throw new CompilerException(lineNumber, "El indice de la tupla esta fuera de rango");
-				if ((cantPos == null) && (endPosition == null)){
+				if ((cantPos == null) && (endPosition == null)&& (!tienePuntos)){ //[N]
 					int index = (int)((LongType)startPos).getValue();
 					if (index < 0){
 						int index_abs = Math.abs(index);
@@ -192,7 +195,7 @@ public class StructuredTypePositionExpression extends Expression{
 					Type ret = tuple.get(index);
 					return ret;
 				}else{
-					if (endPosition != null){
+					if (endPosition != null){ //[N:N..]
 						Type endPos = endPosition.evaluate();
 						if((endPos.getType() != 2) && (endPos.getType() != 0) && (endPos.getType() != 5))
 							throw new CompilerException(lineNumber, "El indice de las tuplas debe ser entero");
@@ -208,28 +211,28 @@ public class StructuredTypePositionExpression extends Expression{
 						if(((LongType)endPos).getValue() > size)
 							throw new CompilerException(lineNumber, "El indice de la tupla esta fuera de rango");
 						ArrayList<Type> tupleRet = new ArrayList<>();
-						if (cantPos != null){
+						if (cantPos != null){ //[N:N:N]
 							int valPos = ((IntegerType)(cantPos.evaluate())).getValue();
 							for(long i = ((LongType)startPos).getValue(); i < ((LongType)endPos).getValue(); i= i + (long)valPos){
 								tupleRet.add(tuple.get((int)i));
 							}
-						}else{
+						}else{ //[N:N]
 							for(long i = ((LongType)startPos).getValue(); i < ((LongType)endPos).getValue(); i++){
 								tupleRet.add(tuple.get((int)i));
 							}
 						}
 						return new TupleType(tupleRet);
 										
-					}else{
+					}else{ //[N:..]
 						ArrayList<Type> tupleRet = new ArrayList<>();
-						if (cantPos != null){
+						if (cantPos != null){ //[N::N]
 							int valPos = ((IntegerType)(cantPos.evaluate())).getValue();
 							for(long i = ((LongType)startPos).getValue(); i < size; i= i + (long)valPos){
 								tupleRet.add(tuple.get((int)i));
 							}
-						}else{
-							for(int i = ((IntegerType)startPos).getValue(); i < (int)size; i++){
-								tupleRet.add(tuple.get(i));
+						}else{ //[N:]
+							for(long i = ((LongType)startPos).getValue(); i < size; i++){
+								tupleRet.add(tuple.get((int)i));
 							}
 						}
 						return new TupleType(tupleRet);
@@ -237,11 +240,11 @@ public class StructuredTypePositionExpression extends Expression{
 					
 				}
 			
-			}else{
+			}else{ //[:..]
 				ArrayList<Type> tuple = ((TupleType)structuredType).getTuple();
 				int size = tuple.size();
 				ArrayList<Type> tupleRet = new ArrayList<>();
-				if (endPosition != null){
+				if (endPosition != null){ //[:N..]
 					Type endPos = endPosition.evaluate();
 					if((endPos.getType() != 2) && (endPos.getType() != 0) && (endPos.getType() != 5))
 						throw new CompilerException(lineNumber, "El indice de las tuplas debe ser entero");
@@ -256,23 +259,23 @@ public class StructuredTypePositionExpression extends Expression{
 					
 					if(((LongType)endPos).getValue() > size)
 						throw new CompilerException(lineNumber, "El indice de la tupla esta fuera de rango");		
-					if (cantPos != null){
+					if (cantPos != null){ //[:N:N]
 						int valPos = ((IntegerType)(cantPos.evaluate())).getValue();
 						for(int i = 0; i < ((LongType)endPos).getValue(); i= i + valPos){
 							tupleRet.add(tuple.get((int)i));
 						}
-					}else{
+					}else{ //[:N]
 						for(int i = 0; i < ((LongType)endPos).getValue(); i++){
 							tupleRet.add(tuple.get((int)i));
 						}
 					}
-				}else{
-					if (cantPos != null){
+				}else{ //[:..]
+					if (cantPos != null){ //[::N]
 						int valPos = ((IntegerType)(cantPos.evaluate())).getValue();
 						for(int i = 0; i < size; i= i + valPos){
 							tupleRet.add(tuple.get((int)i));
 						}
-					}else{
+					}else{ //[:]
 						for(int i = 0; i < size; i++){
 							tupleRet.add(tuple.get((int)i));
 						}
