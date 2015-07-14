@@ -64,6 +64,12 @@ public class StructuredTypePositionExpression extends Expression{
 					throw new CompilerException(lineNumber, "El indice de la lista esta fuera de rango");
 				if ((cantPos == null) && (endPosition == null)){
 					int index = (int)((LongType)startPos).getValue();
+					if (index < 0){
+						int index_abs = Math.abs(index);
+						if (index_abs <= size){
+							index = size - index_abs;
+						}else throw new CompilerException(lineNumber, "El indice de la lista esta fuera de rango");
+					}
 					Type ret = list.get(index);
 					return ret;
 				}else{
@@ -177,6 +183,12 @@ public class StructuredTypePositionExpression extends Expression{
 					throw new CompilerException(lineNumber, "El indice de la tupla esta fuera de rango");
 				if ((cantPos == null) && (endPosition == null)){
 					int index = (int)((LongType)startPos).getValue();
+					if (index < 0){
+						int index_abs = Math.abs(index);
+						if (index_abs <= size){
+							index = size - index_abs;
+						}else throw new CompilerException(lineNumber, "El indice de la tupla esta fuera de rango");
+					}
 					Type ret = tuple.get(index);
 					return ret;
 				}else{
