@@ -50,6 +50,9 @@ public enum TypeEnum {
 		case 6:
 			name = "list";
 			break;
+		case 9:
+			name = "function";
+			break;
 		case 10:
 			name = "dict";
 			break;

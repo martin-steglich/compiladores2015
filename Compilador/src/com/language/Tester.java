@@ -1,7 +1,5 @@
 package com.language;
 
-import com.language.exceptions.CompilerException;
-import com.language.model.program.Program;
 import com.language.parser.ProgramParser;
 
 public class Tester {
@@ -11,8 +9,9 @@ public class Tester {
 		//ProgramParser.parse("WhileTest.py");
 		//ProgramParser.parse("Simple2.py");
 		//ProgramParser.parse("TestIf.py");
-		ProgramParser.parse("StructuredTypesTest.py");
+		//ProgramParser.parse("StructuredTypesTest.py");
 		ProgramParser.parse("EntradaSalida.py");
+		//ProgramParser.parse("FunctionTest.py");
 	}
 	
 }
