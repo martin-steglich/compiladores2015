@@ -53,7 +53,7 @@ public class BinaryOperationExpression extends Expression {
 		boolean stringString = (izq.getType() == 3) && (der.getType() == 3);
 		
 		boolean longInt = (izq.getType() == 2) && (der.getType() == 0);
-		boolean longLong = (izq.getType() == 2) && (der.getType() == 3);
+		boolean longLong = (izq.getType() == 2) && (der.getType() == 2);
 		boolean longFloat = (izq.getType() == 2) && (der.getType() == 1);
 		boolean longBoolean = (izq.getType() == 2) && (der.getType() == 5);
 		
