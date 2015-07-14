@@ -1,9 +1,8 @@
 package com.language.model.type;
 
-import com.language.model.type.Type;
-
 import java.util.ArrayList;
-
+import com.language.model.type.Type;
+import com.language.model.type.TypeEnum;
 
 public class ArrayType extends Type {
 	
@@ -21,6 +20,7 @@ public class ArrayType extends Type {
     public ArrayList<Type> getList(){
         return list;
     }
+    
     public void setList(ArrayList<Type> l){
         list=l;
     }
@@ -32,6 +32,7 @@ public class ArrayType extends Type {
     public void print(){
     	//
     }
+    
     
 	@Override
 	public TypeEnum getTypeEnum() {
@@ -49,11 +50,28 @@ public class ArrayType extends Type {
 			}
 			length--;
 		}
-		l += ")";
+		l += "]";
 		return l;
 	}
 	
 	public boolean getBooleanValue(){
 		return false;
 	}
+	
+	public boolean equals(ArrayType obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ArrayType other = (ArrayType) obj;
+		if (list == null) {
+			if (other.list != null)
+				return false;
+		} else if (!list.equals(other.list))
+			return false;
+		return true;
+	}
+	
 }

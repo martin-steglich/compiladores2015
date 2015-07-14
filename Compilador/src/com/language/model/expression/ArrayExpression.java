@@ -1,11 +1,10 @@
 package com.language.model.expression;
 
 import java.util.ArrayList;
-import java.util.List;
+
 
 import com.language.exceptions.CompilerException;
 import com.language.model.type.ArrayType;
-import com.language.model.type.TupleType;
 import com.language.model.type.Type;
 
 public class ArrayExpression  extends Expression {
