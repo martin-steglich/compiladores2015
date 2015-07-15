@@ -101,6 +101,8 @@ terminal String BREAK, CONTINUE;
 
 terminal String LEFTLLAVE, RIGHTLLAVE, LEFTRECT, RIGHTRECT;
 
+terminal String DOT;
+
 terminal String RETURN;
 
 
@@ -111,6 +113,7 @@ non terminal Expression expression, map_expression, tuple_expression, list_expre
 non terminal expression_map_list, expression_tuple_list, expression_list_list;
 non terminal block;
 non terminal function_parameters, function_parameters_list;
+non terminal arguments, argument_list;
 
 precedence left IF, ELSE;
 precedence left ASSIGN;
@@ -239,7 +242,10 @@ expression ::= INTEGER:i {: RESULT = new IntegerExpression(Integer.valueOf(i), i
 											   	   					  					 :}
 			| ID:i LEFTRECT expression:s COLON expression:e COLON expression:f RIGHTRECT {: IdentifierExpression id = new IdentifierExpression(i, ileft); 
 											   							 					RESULT = new StructuredTypePositionExpression(id, s, e, f,true, ileft);
-											   	   					  					 :};
+											   	   					  					 :}
+			| ID:i DOT ID:func LEFTPARENTHESE arguments:params RIGHTPARENTHESE {: 	IdentifierExpression id = new IdentifierExpression(i, ileft);
+																					RESULT = new MethodCallExpression(id,func,(List<Expression>)params,ileft); 
+																			   :};
 
 
 map_expression ::= LEFTLLAVE:l expression_map_list:list RIGHTLLAVE {: RESULT = new DictionaryExpression((Map<Expression,Expression>)list, lleft); :}
@@ -348,5 +354,16 @@ function_parameters_list ::= ID:i COMMA function_parameters_list:list {: ((Array
 									   RESULT = list;
 									:}
 							 | {: RESULT = new ArrayList<IdentifierExpression>(); :};
+							 
+
+arguments ::= /*epsilon*/{: RESULT = new ArrayList<Expression>(); :}
+| argument_list:args {: RESULT = args; :};
+
+argument_list ::= expression : e {: ArrayList<Expression> args = new ArrayList<Expression>();
+									args.add(e);
+									RESULT = args; :}
+| expression:e COMMA argument_list:elems {: ((ArrayList<Expression>)elems).add(e);
+											RESULT = elems; 
+										 :};
 								  
 								  

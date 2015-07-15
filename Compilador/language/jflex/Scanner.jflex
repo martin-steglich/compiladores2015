@@ -287,6 +287,10 @@ SIMPLE_QUOTE_TRIPLE_STRING: '''EJEMPLO'''
 								System.out.println("GREATEQUAL_THAN");
 								return symbol(sym.GREATEQUAL_THAN); 
 							}
+	"."						{
+								System.out.println("DOT");
+								return symbol(sym.DOT);
+							}
 	"print"					{ 
                                 System.out.println("PRINT");
 								return symbol(sym.PRINT);
@@ -322,6 +326,14 @@ SIMPLE_QUOTE_TRIPLE_STRING: '''EJEMPLO'''
 	"while"					{
 								System.out.println("WHILE");
 								return symbol(sym.WHILE);
+							}
+	"for"					{
+								System.out.println("FOR");
+								return symbol(sym.FOR);
+							}
+	"in"					{
+								System.out.println("IN");
+								return symbol(sym.IN);
 							}
 	"break"					{
 								System.out.println("BREAK");
