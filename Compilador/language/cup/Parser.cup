@@ -360,9 +360,9 @@ arguments ::= /*epsilon*/{: RESULT = new ArrayList<Expression>(); :}
 | argument_list:args {: RESULT = args; :};
 
 argument_list ::= expression : e {: ArrayList<Expression> args = new ArrayList<Expression>();
-									args.add(e);
+									args.add(0,e);
 									RESULT = args; :}
-| expression:e COMMA argument_list:elems {: ((ArrayList<Expression>)elems).add(e);
+| expression:e COMMA argument_list:elems {: ((ArrayList<Expression>)elems).add(0,e);
 											RESULT = elems; 
 										 :};
 								  

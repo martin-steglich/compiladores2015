@@ -58,7 +58,19 @@ public class MethodCallExpression extends Expression {
 				
 				String subStr = ((StringType)sub).getText();
 				
-				int count = str.length() - (str.replace(subStr, "")).length();
+				
+				int lastIndex = 0;
+				int count = 0;
+
+				while((lastIndex != -1) && (subStr.length() > 0)){
+
+				    lastIndex = str.indexOf(subStr,lastIndex);
+
+				    if(lastIndex != -1){
+				        count ++;
+				        lastIndex += subStr.length();
+				    }
+				}
 				ret = new IntegerType(count);
 				
 			}break;
@@ -78,7 +90,7 @@ public class MethodCallExpression extends Expression {
 				String subStr = ((StringType)sub).getText();
 				if(start != null){
 					int startInt = 0;
-					if (start.getType() == 1){
+					if (start.getType() == 0){
 						startInt = ((IntegerType)start).getValue();
 					}else if (start.getType() == 2){
 						startInt = (int)((LongType)start).getValue();
@@ -133,6 +145,7 @@ public class MethodCallExpression extends Expression {
 				
 				String subStr = ((StringType)sub).getText();
 				
+				
 				ArrayList<Type> strList = new ArrayList<>();
 				for(String s :str.split(subStr)){
 					StringType t = new StringType(s);
@@ -155,8 +168,7 @@ public class MethodCallExpression extends Expression {
 				
 				String oldStr = ((StringType)old).getText();
 				String newStr = ((StringType)newT).getText();
-				
-				str.replaceFirst(oldStr, newStr);
+				str = str.replaceFirst(oldStr, newStr);
 				
 				ret = new StringType(str);
 				
@@ -229,7 +241,7 @@ public class MethodCallExpression extends Expression {
 					
 					int index = list.size();
 					for(int i = start; i < list.size(); i++){
-						if(list.get(i) == value){			
+						if(list.get(i).equals(value)){			
 							index = i;
 							break;
 						}
