@@ -61,8 +61,6 @@ public class ListType extends Type {
 	public boolean equals(ListType obj) {
 		if (this == obj)
 			return true;
-		if (!super.equals(obj))
-			return false;
 		if (getClass() != obj.getClass())
 			return false;
 		ListType other = (ListType) obj;

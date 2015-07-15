@@ -55,8 +55,6 @@ public class TupleType extends Type{
 	public boolean equals(TupleType obj) {
 		if (this == obj)
 			return true;
-		if (!super.equals(obj))
-			return false;
 		if (getClass() != obj.getClass())
 			return false;
 		TupleType other = (TupleType) obj;

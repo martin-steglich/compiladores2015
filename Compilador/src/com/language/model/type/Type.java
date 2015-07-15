@@ -66,9 +66,9 @@ public abstract class Type {
 		if(this instanceof DictionaryType)
 			return ((DictionaryType)this).equals((DictionaryType)type);
 		
-//		if(this instanceof TupleType)
-//			return ((TupleType)this).equals((TupleType)type);
-		
+		if(this instanceof TupleType)
+			return ((TupleType)this).equals((TupleType)type);
+	
 		return true;
 	};
 	

@@ -41,8 +41,6 @@ public class StringType extends Type{
 	public boolean equals(StringType obj) {
 		if (this == obj)
 			return true;
-		if (!super.equals(obj))
-			return false;
 		if (getClass() != obj.getClass())
 			return false;
 		StringType other = (StringType) obj;
