@@ -11,10 +11,10 @@ public class FunctionStatement extends Statement {
 
 	IdentifierExpression funcName;
 	List<IdentifierExpression> params;
-	List<Statement> funcBody;
+	BlockStatement funcBody;
 	int lineNumber;
 	
-	public FunctionStatement(IdentifierExpression funcName, List<IdentifierExpression> params, List<Statement> funcBody) {
+	public FunctionStatement(IdentifierExpression funcName, List<IdentifierExpression> params, BlockStatement funcBody) {
 		this.funcName = funcName;
 		this.params = params;
 		this.funcBody = funcBody;
@@ -26,6 +26,10 @@ public class FunctionStatement extends Statement {
 	
 	public List<IdentifierExpression> getParams() {
 		return params;
+	}
+	
+	public BlockStatement getFuncBody() {
+		return funcBody;
 	}
 	
 	public int getLineNumber() {

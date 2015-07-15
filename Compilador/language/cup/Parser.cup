@@ -301,7 +301,7 @@ compound_statement ::= IF expression:e COLON block:i ELSE COLON block:b {: RESUL
 					   | FOR ID:var IN expression:exp COLON block:b {: RESULT = new ForStatement(var, exp, (List<Statement>)b, bleft); :}
 					   | DEF ID:i function_parameters:list COLON block:b {:  setReturnFlag(false);
 					   														 IdentifierExpression id = new IdentifierExpression(i, ileft);
-					   			 											 RESULT = new FunctionStatement(id, (List<IdentifierExpression>) list, (List<Statement>) b);
+					   			 											 RESULT = new FunctionStatement(id, (List<IdentifierExpression>) list, (BlockStatement) b);
 					   													 :};
 					   
 stmt_list ::= simple_statement:stmt simple_stmt_semicolon_list:list {: 	((List<Statement>)list).add((Statement)stmt); 
