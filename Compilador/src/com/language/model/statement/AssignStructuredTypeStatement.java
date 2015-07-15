@@ -38,9 +38,7 @@ public class AssignStructuredTypeStatement extends Statement {
 		
 		if (estructuredType.getType() == 10) { // DICT
 			Map<Type, Type> dictionary = ((DictionaryType) estructuredType).getDictionary();
-			if(!dictionary.containsKey(pos))
-				throw new CompilerException(lineNumber, "La variable '" + id.getId() + "' no contiene la entrada '" + pos.getAsString() + "'");
-			dictionary.put(pos, value);
+			dictionary.put(pos, value);	
 		} else if (estructuredType.getType() == 6) { // LIST
 			
 			if((pos.getType() != 2) && (pos.getType() != 0) && (pos.getType() != 5))

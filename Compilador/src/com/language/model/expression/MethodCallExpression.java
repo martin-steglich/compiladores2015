@@ -255,7 +255,7 @@ public class MethodCallExpression extends Expression {
 				}else{
 					int index = list.indexOf(value);
 					if (index < 0){
-						throw new CompilerException(lineNumber, "El elemento indicado no esta en la lista");
+						throw new CompilerException(lineNumber, value.getAsString() + " no esta en la lista");
 					}
 					else ret = new IntegerType(index);
 				}
