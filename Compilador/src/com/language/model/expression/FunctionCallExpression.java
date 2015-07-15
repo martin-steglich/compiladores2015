@@ -28,7 +28,7 @@ public class FunctionCallExpression extends Expression {
 	 }
 	
 	public String getType(){
-		 return "LlamadaAFuncion";
+		 return "Llamada A Funcion";
 	 }
 	
 	public Type evaluate() throws CompilerException {
