@@ -1,12 +1,12 @@
 package com.language.model.stack;
 
 import java.util.HashMap;
-import java.util.Stack;
 import java.util.Map;
 
 import com.language.exceptions.CompilerException;
 import com.language.model.type.Type;
 import com.language.model.statement.FunctionStatement;
+import com.language.model.stack.Stack;
 
 public class StackHandler {
 
@@ -48,7 +48,6 @@ public class StackHandler {
 		else if (variables.containsKey(id))
 			return variables.get(id);
 		else return null;
-
 	}
 	
 	public FunctionStatement findFunction(String id) throws CompilerException {
