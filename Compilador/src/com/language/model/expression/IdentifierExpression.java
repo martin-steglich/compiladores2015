@@ -35,9 +35,10 @@ public class IdentifierExpression extends Expression {
 	public Type evaluate() throws CompilerException{
 		Type t = null;
 		StackHandler s = StackHandler.getInstance();
-		//Stack stack = s.getStack();
-		t = s.findVariable(id);
-			if (t == null)
+		Stack stack = s.getStack();
+		//t = stack.findInActualScope(id);
+		t = stack.findTypeValue(id);	
+		if (t == null)
 				throw new CompilerException(lineNumber, "Variable "+ id +" no definida");
 	
 		return t;

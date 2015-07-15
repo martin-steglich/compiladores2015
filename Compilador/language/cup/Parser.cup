@@ -30,33 +30,33 @@ parser code {:
 action code {:
 
 	private boolean returnFlag;
-	private int returnLine = 0;
-	private int returnColumn = 0;
+	private int returnLine;
+	private int returnColumn;
 
 	private boolean breakFlag;
-	private int breakLine = 0;
-	private int breakColumn = 0;
+	private int breakLine;
+	private int breakColumn;
 	
 	private boolean continueFlag;
-	private int continueLine = 0;
-	private int continueColumn = 0;
+	private int continueLine;
+	private int continueColumn;
 	
-	public void setReturnFlag(boolean value) {
+	public void setReturnFlag(boolean value, int line, int column) {
 		returnFlag = value;
-		//returnLine = line;
-		//returnColumn = column;
+		returnLine = line;
+		returnColumn = column;
 	}
 	
-	public void setBreakFlag(boolean value) {
+	public void setBreakFlag(boolean value, int line, int column) {
 		breakFlag = value;
-		//breakLine = line;
-		//breakColumn = column;
+		breakLine = line;
+		breakColumn = column;
 	}
 	
-	public void setContinueFlag(boolean value) {
+	public void setContinueFlag(boolean value, int line, int column) {
 		continueFlag = value;
-		//continueLine = line;
-		//continueColumn = column;
+		continueLine = line;
+		continueColumn = column;
 	}
 	
 	public void checkReturnErrors() {
@@ -128,12 +128,13 @@ precedence right ID, LEFTRECT, LEFTPARENTHESE;
 
 
 
-program	::=	module:list {: 
+program	::=	module:list {: 	checkBreakContinueErrors();
+							checkReturnErrors();
 							Collections.reverse((List<Statement>)list);
 							RESULT = new Program((List<Statement>)list);
 						:};
 						
-module ::= simple_statement:stmt simple_statement_list:list {:
+module ::= simple_statement:stmt simple_statement_list:list {:	
 						 										((List<Statement>)list).add((Statement)stmt);
 																RESULT = list;
 															:}
@@ -168,15 +169,15 @@ simple_statement ::= expression:e {: RESULT = e; :}
 					 | ID:i ASSIGN expression:e {: RESULT = new AssignStatement(i, (Expression)e, ileft); :}
 					 | PRINT:p expression:e {: RESULT = new PrintStatement((Expression) e, pleft); :}
 					 | TYPE:t LEFTPARENTHESE expression:e RIGHTPARENTHESE {: RESULT = new TypeStatement((Expression) e, tleft);	:}
-					 | BREAK :b  {: setBreakFlag(true);
+					 | BREAK :b  {: setBreakFlag(true, bleft, bright);
 									RESULT = new BreakStatement(bleft); 
 								:}
-					 | CONTINUE :c {: setContinueFlag(true);
+					 | CONTINUE :c {: setContinueFlag(true, cleft, cright);
 									  RESULT = new ContinueStatement(cleft); :}
 					 | ID:i LEFTRECT expression:k RIGHTRECT ASSIGN expression:e {: IdentifierExpression id = new IdentifierExpression(i, ileft);
 					 															   RESULT = new AssignStructuredTypeStatement(id, e, k, ileft);
 					 															:}
-					 | RETURN expression_list_list:list {:	setReturnFlag(true); 
+					 | RETURN expression_list_list:list {:	setReturnFlag(true, listleft, listright); 
 					 									   	RESULT = new ReturnStatement((List<Expression>) list, 0);
 					 									:};
 
@@ -300,12 +301,15 @@ expression_list_list ::= expression_list_list:list COMMA expression:e   {: ((Arr
 
 compound_statement ::= IF expression:e COLON block:i ELSE COLON block:b {: RESULT = new IfStatement(e, (List<Statement>) i,(List<Statement>) b, eleft ); :}
 					   | IF expression:e COLON block:b {: RESULT = new IfStatement(e, (List<Statement>) b, null, eleft); :}
-					   | WHILE expression:e COLON block:b {: setContinueFlag(false);
-															 setBreakFlag(false); 
+					   | WHILE expression:e COLON block:b {: setContinueFlag(false, eleft, eright);
+															 setBreakFlag(false, eleft, eright); 
 					   										 RESULT = new WhileStatement(e, (List<Statement>) b, eleft); 
 					   									  :}
-					   | FOR ID:var IN expression:exp COLON block:b {: RESULT = new ForStatement(var, exp, (List<Statement>)b, bleft); :}
-					   | DEF ID:i function_parameters:list COLON block:b {:  setReturnFlag(false);
+					   | FOR ID:var IN expression:exp COLON block:b {:	setContinueFlag(false, expleft, expright);
+															 			setBreakFlag(false, expleft, expright);  
+					   													RESULT = new ForStatement(var, exp, (List<Statement>)b, bleft); 
+					   												:}
+					   | DEF ID:i function_parameters:list COLON block:b {:  setReturnFlag(false, ileft, iright);
 					   														 IdentifierExpression id = new IdentifierExpression(i, ileft);
 					   			 											 RESULT = new FunctionStatement(id, (List<IdentifierExpression>) list, (BlockStatement) b);
 					   													 :};

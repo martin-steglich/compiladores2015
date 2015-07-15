@@ -37,11 +37,7 @@ public class StackHandler {
 	public Stack getStack() {
 		return stack;
 	}
-
-	public  void addVariable(String id, Type type) {
-		variables.put(id, type);
-	}
-
+	
 	public Type findVariable(String id) {
 		if (variables == null)
 			return null;

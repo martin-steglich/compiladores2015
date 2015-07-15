@@ -7,7 +7,7 @@ import java.util.Map.Entry;
 
 import com.language.exceptions.CompilerException;
 import com.language.model.expression.Expression;
-import com.language.model.expression.IdentifierExpression;
+import com.language.model.stack.Stack;
 import com.language.model.stack.StackHandler;
 import com.language.model.type.BreakType;
 import com.language.model.type.ContinueType;
@@ -35,8 +35,9 @@ public class ForStatement extends Statement {
 		if((iterableType.getType() != 3) && (iterableType.getType() != 6) && (iterableType.getType() != 10) && (iterableType.getType() != 11))
 				throw new CompilerException(lineNumber, "Tipo de datos no soportado para el For");
 		
-		StackHandler stack = StackHandler.getInstance();
-		//Stack stack = s.getStack();
+		StackHandler stackHandler = StackHandler.getInstance();
+		Stack stack = stackHandler.getStack();
+		stack.openScope();
 		Type ret = null;
 		if(iterableType.getType() == 3){
 			String s = ((StringType)iterableType).getText();
@@ -44,7 +45,7 @@ public class ForStatement extends Statement {
 			for(int i = 0; i < length; i++){
 				
 				String actualChar = String.valueOf(s.charAt(i));
-				stack.addVariable(var, new StringType(actualChar));
+				stack.addVariableToActualScope(var, new StringType(actualChar));
 				
 				for(Statement st : block){
 					ret = st.execute();
@@ -58,7 +59,7 @@ public class ForStatement extends Statement {
 			ArrayList<Type> s = ((ListType)iterableType).getList();
 			for(Type t : s){
 				
-				stack.addVariable(var, t);
+				stack.addVariableToActualScope(var, t);
 				
 				for(Statement st : block){
 					ret = st.execute();
@@ -74,7 +75,7 @@ public class ForStatement extends Statement {
 			
 			for(Entry<Type, Type> entry : s.entrySet()){
 				
-				stack.addVariable(var, entry.getKey());
+				stack.addVariableToActualScope(var, entry.getKey());
 				
 				for(Statement st : block){
 					ret = st.execute();
@@ -88,7 +89,7 @@ public class ForStatement extends Statement {
 			ArrayList<Type> s = ((ListType)iterableType).getList();
 			for(Type t : s){
 				
-				stack.addVariable(var, t);
+				stack.addVariableToActualScope(var, t);
 				
 				for(Statement st : block){
 					ret = st.execute();
@@ -100,6 +101,7 @@ public class ForStatement extends Statement {
 			}
 		}
 
+		stack.closeScope();
 		
 		return ret;
 	}

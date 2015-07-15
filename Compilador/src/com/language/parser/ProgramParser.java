@@ -79,7 +79,5 @@ public class ProgramParser {
 		return ous.toByteArray();
 	}
 	
-	public static void readAux(String fileName){
-		
-	}
+
 }

@@ -31,7 +31,6 @@ public class AssignStructuredTypeStatement extends Statement {
 	}
 
 	public Type execute() throws CompilerException {
-		StackHandler stackHandler = StackHandler.getInstance();
 		Type estructuredType = id.evaluate();
 		Type pos = position.evaluate();
 		Type value = expression.evaluate();

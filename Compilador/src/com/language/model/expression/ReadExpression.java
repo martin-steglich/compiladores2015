@@ -28,6 +28,7 @@ public class ReadExpression extends Expression {
 
 	}
 
+	@SuppressWarnings("resource")
 	@Override
 	public Type evaluate() throws CompilerException {
 		System.out.print(message.getAsString());

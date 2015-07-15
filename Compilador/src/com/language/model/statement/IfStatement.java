@@ -4,6 +4,8 @@ import java.util.List;
 
 import com.language.exceptions.CompilerException;
 import com.language.model.expression.Expression;
+import com.language.model.stack.Stack;
+import com.language.model.stack.StackHandler;
 import com.language.model.type.BooleanType;
 import com.language.model.type.Type;
 
@@ -30,6 +32,10 @@ public class IfStatement extends Statement{
 			conditionBool = cond.getBooleanValue();
 		else
 			throw new CompilerException(lineNumber, "Tipo de datos no soportado para condicion de If");
+		
+		StackHandler stackHandler = StackHandler.getInstance();
+		Stack stack = stackHandler.getStack();
+		stack.openScope();
 		Type ret = null;
 		if(conditionBool){
 			for(Statement st : blockIf){
@@ -40,6 +46,8 @@ public class IfStatement extends Statement{
 				ret = st.execute();
 			}
 		}
+		
+		stack.closeScope();
 		
 		return ret;
 	}

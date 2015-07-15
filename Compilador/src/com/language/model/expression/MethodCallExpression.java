@@ -389,14 +389,6 @@ public class MethodCallExpression extends Expression {
 	
 	
 	
-	/****TODO*******
-	 * String -> find
-	 * 
-	 * List -> index, insert, pop, size
-	 * 
-	 * Dict -> Todas 
-	 * 
-	 ****TODO*******/
 	
 	
 }

@@ -4,6 +4,8 @@ import java.util.List;
 
 import com.language.exceptions.CompilerException;
 import com.language.model.expression.Expression;
+import com.language.model.stack.Stack;
+import com.language.model.stack.StackHandler;
 import com.language.model.type.BooleanType;
 import com.language.model.type.BreakType;
 import com.language.model.type.ContinueType;
@@ -30,6 +32,9 @@ public class WhileStatement extends Statement {
 		else
 			throw new CompilerException(lineNumber, "Tipo de datos no soportado para condicion de While");
 
+		StackHandler stackHandler = StackHandler.getInstance();
+		Stack stack = stackHandler.getStack();
+		stack.openScope();
 		Type ret = null;
 		while (conditionBool) {
 			for (Statement st : block) {
@@ -53,6 +58,7 @@ public class WhileStatement extends Statement {
 			
 		}
 		
+		stack.closeScope();
 		return ret;
 	}
 
