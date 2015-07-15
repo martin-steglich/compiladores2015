@@ -114,11 +114,15 @@ non terminal function_parameters, function_parameters_list;
 
 precedence left IF, ELSE;
 precedence left ASSIGN;
+precedence left NOT;
+precedence left AND;
+precedence left OR;
+precedence left EQUALS, NOT_EQUALS, LESS_THAN, GREAT_THAN, LESSEQUAL_THAN, GREATEQUAL_THAN;
 precedence left PLUS, MINUS;
 precedence left MUL, DIV, EXP, INT_DIV, MOD;
-precedence left AND, OR, EQUALS, NOT_EQUALS, LESS_THAN, GREAT_THAN, LESSEQUAL_THAN, GREATEQUAL_THAN;
 precedence left AND_BIT, OR_BIT, XOR_BIT, LSHIFT_BIT, RSHIFT_BIT;
 precedence right ID, LEFTRECT, LEFTPARENTHESE;
+
 
 
 program	::=	module:list {: 

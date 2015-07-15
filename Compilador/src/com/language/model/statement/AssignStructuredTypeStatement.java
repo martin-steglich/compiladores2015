@@ -64,8 +64,8 @@ public class AssignStructuredTypeStatement extends Statement {
 			
 			ArrayList<Type> list = ((ListType)estructuredType).getList();
 			if ( ((LongType)pos).getValue() < (long)list.size()){
-				list.remove(((LongType)pos).getValue());
 				int index = (int)((LongType)pos).getValue();
+				list.remove(index);
 				list.add(index, value);
 			}else throw new CompilerException(lineNumber, "El indice de la lista se sale de rango");
 			
