@@ -1,0 +1,15 @@
+a = [0,'hola',3,"pez",8,10,2,54]
+
+print a[-3]
+print a[3]
+print a[0:2]
+print a[0:3:2]
+print a[1:]
+print a[:3]
+print a[:]
+print a[::2]
+print a[:4:1]
+print a[4::3]
+a[0] = "ok"
+print a[:]
+print a[9]
