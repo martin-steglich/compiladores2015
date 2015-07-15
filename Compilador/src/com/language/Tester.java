@@ -9,10 +9,11 @@ public class Tester {
 		//ProgramParser.parse("WhileTest.py");
 		//ProgramParser.parse("Simple2.py");
 		//ProgramParser.parse("TestIf.py");
-		ProgramParser.parse("StructuredTypesTest.py");
+		//ProgramParser.parse("StructuredTypesTest.py");
 		//ProgramParser.parse("EntradaSalida.py");
 		//ProgramParser.parse("FunctionTest.py");
 		//ProgramParser.parse("ForStatement.py");
+		ProgramParser.parse("PredefinedFunctions.py");
 	}
 	
 }
