@@ -1,6 +1,9 @@
 a = [0,'hola',3,"pez",8,10,2,54]
 b = (0,4,3,7+5,8,10,9==9,54)
-#c = {"uno":1,"dos":2,"tres":3}
+c = {"uno":b,"dos":2,"tres":3}
+
+print "map"
+print c
 
 print "lista"
 print a[-3]

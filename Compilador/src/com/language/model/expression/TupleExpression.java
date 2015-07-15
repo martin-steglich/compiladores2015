@@ -11,16 +11,11 @@ import com.language.model.type.Type;
 
 public class TupleExpression extends Expression{
 
-	ArrayList<Type> tuple;
+	ArrayList<Expression> tuple;
 	int lineNumber;
 		
 	public TupleExpression(ArrayList<Expression> tuple, int lineNumber) throws CompilerException{
-		this.tuple = new ArrayList<>();
-		for (Expression e : tuple)
-		{
-		    Type item = e.evaluate();
-		    this.tuple.add(item);
-		}
+		this.tuple = tuple;
 		this.lineNumber = lineNumber;
 	}
 
@@ -30,9 +25,15 @@ public class TupleExpression extends Expression{
 
 	@Override
 	public Type evaluate() throws CompilerException {
-		TupleType tup = new TupleType(tuple);
+		ArrayList<Type> tup = new ArrayList<>();
+		for (Expression e : tuple)
+		{
+		    Type item = e.evaluate();
+		    tup.add(item);
+		}
+		TupleType tupleType = new TupleType(tup);
 		
-		return tup;
+		return tupleType;
 		
 	}
 
