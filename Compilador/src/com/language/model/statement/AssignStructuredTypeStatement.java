@@ -37,17 +37,9 @@ public class AssignStructuredTypeStatement extends Statement {
 		Type value = expression.evaluate();
 		
 		if (estructuredType.getType() == 10) { // DICT
-			if((pos.getType() != 2) && (pos.getType() != 0) && (pos.getType() != 5))
-				throw new CompilerException(lineNumber, "El indice de los diccionarios debe ser entero");
-			if(pos.getType() == 5){
-				long start = (long)((BooleanType)pos).getEquivalentInt();
-				pos = new LongType(start);
-			}
-			if(pos.getType() == 0){
-				long start = (long)((IntegerType)pos).getValue();
-				pos = new LongType(start);
-			}
 			Map<Type, Type> dictionary = ((DictionaryType) estructuredType).getDictionary();
+			if(!dictionary.containsKey(pos))
+				throw new CompilerException(lineNumber, "La variable '" + id.getId() + "' no contiene la entrada '" + pos.getAsString() + "'");
 			dictionary.put(pos, value);
 		} else if (estructuredType.getType() == 6) { // LIST
 			
