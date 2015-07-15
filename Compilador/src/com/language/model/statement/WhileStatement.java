@@ -25,7 +25,7 @@ public class WhileStatement extends Statement {
 		Type cond = condition.evaluate();
 		int type = cond.getType();
 		boolean conditionBool = false;
-		if((type == 0) || (type == 1) || (type == 2) || (type == 3) || (type == 5)) 
+		if((type == 0) || (type == 1) || (type == 2) || (type == 3) || (type == 5)  || (type == 6) || (type == 10) || (type == 11) ) 
 			conditionBool = cond.getBooleanValue();
 		else
 			throw new CompilerException(lineNumber, "Tipo de datos no soportado para condicion de While");

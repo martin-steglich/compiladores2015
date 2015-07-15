@@ -4,4 +4,6 @@ while a < 10:
 	if (a % 2) == 0:
 		continue
 	print a
-	
+b = 1
+while b<10
+	b = b + 1

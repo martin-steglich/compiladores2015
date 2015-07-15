@@ -4,3 +4,6 @@ c = {"uno":b,"dos":2,"tres":3}
 print c
 c["uno"]= "ok"
 print c
+c["cuatro"]= 4
+print c
+print c["sol"]

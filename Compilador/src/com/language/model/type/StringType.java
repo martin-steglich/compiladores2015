@@ -32,7 +32,7 @@ public class StringType extends Type{
 	}
 	
 	public boolean getBooleanValue(){
-		return text.isEmpty();
+		return false;
 	}
 
 
