@@ -7,7 +7,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import com.language.exceptions.ParsingException;
+import com.language.model.stack.*;
 import com.language.model.program.*;
 
 ;
@@ -26,7 +26,14 @@ public class ProgramParser {
 
 			Parser parser = new Parser(new Scanner(bais));
 			Object result = parser.parse().value;
+			
+			StackHandler stackHandler = StackHandler.getInstance();
+			stackHandler.reset();
+			stackHandler.getStack().openScope();
+			
 			((Program)result).execute();
+			
+			stackHandler.getStack().closeScope();
 
 		} catch (Throwable ex) {
 			System.out.println(ex.getMessage());
