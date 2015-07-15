@@ -1,14 +1,17 @@
 package com.language.parser;
 
+import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintWriter;
 
-import com.language.model.stack.*;
-import com.language.model.program.*;
+import com.language.model.program.Program;
+import com.language.model.stack.StackHandler;
 
 ;
 
@@ -17,13 +20,14 @@ public class ProgramParser {
 	public static void parse(String fileName) {
 		System.out.println("\n/*************** " + fileName
 				+ " *****************/");
+		//readAux(fileName);
 		File file = new File(fileName);
 		byte[] expbytes;
 		try {
 			expbytes = read(file);
 
 			ByteArrayInputStream bais = new ByteArrayInputStream(expbytes);
-
+			
 			Parser parser = new Parser(new Scanner(bais));
 			Object result = parser.parse().value;
 			
@@ -48,13 +52,17 @@ public class ProgramParser {
 		ByteArrayOutputStream ous = null;
 		InputStream ios = null;
 		try {
+			
 			byte[] buffer = new byte[4096];
 			ous = new ByteArrayOutputStream();
 			ios = new FileInputStream(file);
 			int read = 0;
 			while ((read = ios.read(buffer)) != -1) {
 				ous.write(buffer, 0, read);
+				
 			}
+			String s = "\n";
+			ous.write(s.getBytes());
 		} finally {
 			try {
 				if (ous != null)
@@ -69,5 +77,9 @@ public class ProgramParser {
 			}
 		}
 		return ous.toByteArray();
+	}
+	
+	public static void readAux(String fileName){
+		
 	}
 }
