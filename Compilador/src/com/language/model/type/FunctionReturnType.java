@@ -36,6 +36,21 @@ public class FunctionReturnType extends Type {
 
 	@Override
 	public String getAsString() {
-		return "";
+		if (types.size() == 1){
+			return types.get(0).getAsString();
+		}else{
+			String t = "(";
+			int length = types.size();
+			for (Type type : types){
+				t += type.getAsString();
+				if((length > 1) || (types.size() == 1)){
+					t += ",";
+				}
+				length--;
+			}
+			t += ")";
+			return t;
+		}
+		
 	}
 }

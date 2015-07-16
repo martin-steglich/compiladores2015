@@ -42,7 +42,7 @@ public enum TypeEnum {
 			name = "str";
 			break;
 		case 4:
-			name = "none";
+			name = "None";
 			break;
 		case 5:
 			name = "bool";

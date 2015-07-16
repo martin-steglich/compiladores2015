@@ -51,9 +51,10 @@ public class StackHandler {
 		if (functions.containsKey(id)) {
 			return functions.get(id);
 		} else {
+			return null;
 			// en el caso de no encontrarse la funcion se retorna un error
-			throw new CompilerException(null, "La function " + id
-					+ " no se encuentra definida.");
+//			throw new CompilerException(null, "La function " + id
+//					+ " no se encuentra definida.");
 		}
 	}
 	
@@ -63,6 +64,11 @@ public class StackHandler {
 			// Se busca la funcion y en caso que exista se envia un 
 			// mensaje de error de que la funcion ya fue definida con anterioridad
 			funcAux = findFunction(id);
+			if(funcAux == null){
+				functions.put(func.getFuncName().getId(), func);
+				return;
+			}
+				
 		} catch (CompilerException e) {
 			functions.put(func.getFuncName().getId(), func);
 			return;

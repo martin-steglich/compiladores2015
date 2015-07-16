@@ -26,13 +26,13 @@ public class BlockFunctionStatement extends Statement{
 		boolean hasReturn = false;
 		for (Statement statement : statements) {
 			ret = statement.execute();
-			 if(ret instanceof FunctionType){
+			 if(ret instanceof FunctionReturnType){
 				 hasReturn = true;
 				 break;
 			 }
 		}
 		if(!hasReturn)
-			ret = null;
+			ret = new NoneType();
 		return ret;
 	}
 	

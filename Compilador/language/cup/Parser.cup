@@ -6,7 +6,6 @@ import com.language.model.program.*;
 import com.language.model.expression.*;
 import com.language.model.statement.*;
 import com.language.exceptions.*;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Collections;
 
@@ -114,6 +113,7 @@ non terminal expression_map_list, expression_tuple_list, expression_list_list;
 non terminal block;
 non terminal function_parameters, function_parameters_list;
 non terminal arguments, argument_list;
+non terminal function_call, function_call_parameters_list, function_call_parameters_map;
 
 precedence left IF, ELSE;
 precedence left ASSIGN;
@@ -152,7 +152,7 @@ statement_newline_list ::=	NEWLINE statement_newline_list:list {:
 							| 			
 							/*epsilon*/							
 							{: 
-								RESULT = new LinkedList<Statement>(); 
+								RESULT = new ArrayList<Statement>(); 
 							:}; 
 															
 simple_statement_list ::= simple_statement:stmt simple_statement_list:list {: 	
@@ -162,7 +162,7 @@ simple_statement_list ::= simple_statement:stmt simple_statement_list:list {:
 						  | 
 						  /* epsilon */
 						  {: 
-						  	RESULT = new LinkedList<Statement>(); 
+						  	RESULT = new ArrayList<Statement>(); 
 						  :};
 						  
 simple_statement ::= expression:e {: RESULT = e; :} 
@@ -246,7 +246,8 @@ expression ::= INTEGER:i {: RESULT = new IntegerExpression(Integer.valueOf(i), i
 											   	   					  					 :}
 			| ID:i DOT ID:func LEFTPARENTHESE arguments:params RIGHTPARENTHESE {: 	IdentifierExpression id = new IdentifierExpression(i, ileft);
 																					RESULT = new MethodCallExpression(id,func,(List<Expression>)params,ileft); 
-																			   :};
+																			   :}
+			| function_call:e {: RESULT = (FunctionCallExpression)e; :};
 
 
 map_expression ::= LEFTLLAVE:l expression_map_list:list RIGHTLLAVE {: RESULT = new DictionaryExpression((Map<Expression,Expression>)list, lleft); :}
@@ -311,7 +312,8 @@ compound_statement ::= IF expression:e COLON block:i ELSE COLON block:b {: RESUL
 					   												:}
 					   | DEF ID:i function_parameters:list COLON block:b {:  setReturnFlag(false, ileft, iright);
 					   														 IdentifierExpression id = new IdentifierExpression(i, ileft);
-					   			 											 RESULT = new FunctionStatement(id, (List<IdentifierExpression>) list, (BlockStatement) b);
+					   														 BlockStatement block = new BlockStatement((List<Statement>)b);
+					   			 											 RESULT = new FunctionStatement(id, (List<IdentifierExpression>) list, block);
 					   													 :};
 					   
 stmt_list ::= simple_statement:stmt simple_stmt_semicolon_list:list {: 	((List<Statement>)list).add((Statement)stmt); 
@@ -325,12 +327,12 @@ simple_stmt_semicolon_list ::= SEMICOLON simple_statement:stmt simple_stmt_semic
 							   | 
 							   /*epsilon*/											
 							   {:
-							    	RESULT = new LinkedList<Statement>(); 
+							    	RESULT = new ArrayList<Statement>(); 
 							   :};
 							    
 statement ::= stmt_list:list NEWLINE {: RESULT = list;
 									 :}
-			  | compound_statement:stmt {:	List<Statement> list = new LinkedList<Statement>();
+			  | compound_statement:stmt {:	List<Statement> list = new ArrayList<Statement>();
 											list.add((Statement)stmt);
 											RESULT = list;
 										:};
@@ -343,12 +345,13 @@ block ::= stmt_list:list NEWLINE {: RESULT = (List<Statement>)list;
 statement_list ::= statement_list:list statement:stmt {:((List<Statement>)list).addAll((List<Statement>)stmt);
 														RESULT = list;
 													  :}
-				   | statement : stmt {: List<Statement> list = new LinkedList<Statement>();
+				   | statement : stmt {: List<Statement> list = new ArrayList<Statement>();
 										list.addAll((List<Statement>)stmt);
 										RESULT = list;
 									  :};
 
-function_parameters ::= LEFTPARENTHESE function_parameters_list:list RIGHTPARENTHESE {: RESULT = list; :};
+function_parameters ::= LEFTPARENTHESE function_parameters_list:list RIGHTPARENTHESE {: RESULT = list; :}
+						|LEFTPARENTHESE RIGHTPARENTHESE {: RESULT = new ArrayList<IdentifierExpression>(); :};
 
 function_parameters_list ::= ID:i COMMA function_parameters_list:list {: ((ArrayList<IdentifierExpression>)list).add(new IdentifierExpression(i,ileft));
 																		 RESULT = list;
@@ -356,8 +359,7 @@ function_parameters_list ::= ID:i COMMA function_parameters_list:list {: ((Array
 							 | ID:i {: ArrayList<IdentifierExpression> list = new ArrayList<>();
 									   list.add(new IdentifierExpression(i,ileft));
 									   RESULT = list;
-									:}
-							 | {: RESULT = new ArrayList<IdentifierExpression>(); :};
+									:};
 							 
 
 arguments ::= /*epsilon*/{: RESULT = new ArrayList<Expression>(); :}
@@ -369,5 +371,27 @@ argument_list ::= expression : e {: ArrayList<Expression> args = new ArrayList<E
 | expression:e COMMA argument_list:elems {: ((ArrayList<Expression>)elems).add(0,e);
 											RESULT = elems; 
 										 :};
+
+function_call ::= ID:id LEFTPARENTHESE function_call_parameters_list:params RIGHTPARENTHESE {: RESULT = new FunctionCallExpression(id, (List<Expression>) params, idleft); :}
+				| ID:id LEFTPARENTHESE function_call_parameters_map:params RIGHTPARENTHESE {: RESULT = new FunctionCallExpression(id, (Map<IdentifierExpression, Expression>) params, idleft); :}
+				| ID:id LEFTPARENTHESE RIGHTPARENTHESE {: RESULT = new FunctionCallExpression(id, idleft); :};
+
+function_call_parameters_list ::= function_call_parameters_list:list COMMA expression:e   {: ((ArrayList<Expression>)list).add(0,e);
+																		    RESULT = list;
+																		:}
+						| expression:e {: ArrayList<Expression> lista = new ArrayList<>();
+										  lista.add(0,e);
+										  RESULT = lista;
+									   :};
+
+function_call_parameters_map ::= function_call_parameters_map:params COMMA ID:i ASSIGN expression:e {: IdentifierExpression id = new IdentifierExpression(i, ileft);
+																										((Map<IdentifierExpression, Expression>)params).put(id, e);
+																										RESULT = params;
+																							  		:}
+								| ID:i ASSIGN expression:e {: Map<IdentifierExpression, Expression> params = new HashMap<IdentifierExpression, Expression>();
+															  IdentifierExpression id = new IdentifierExpression(i, ileft);
+															  ((Map<IdentifierExpression, Expression>)params).put(id, e);
+														      RESULT = params;
+												  		   :};
 								  
 								  

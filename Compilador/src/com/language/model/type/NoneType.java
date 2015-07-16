@@ -26,7 +26,7 @@ public class NoneType extends Type{
 
 	@Override
 	public String getAsString() {
-		return "none";
+		return "None";
 	}
 	
 	public boolean getBooleanValue(){

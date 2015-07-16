@@ -14,15 +14,11 @@ public class BlockStatement extends Statement {
 	List<Statement> statements;
 	Type ret;
 	
-	public BlockStatement() {
-		this.statements = new ArrayList<Statement>();
+	public BlockStatement(List<Statement> statements) {
+		this.statements = statements;
 		ret = null;
 	}
 	
-	public BlockStatement addStatement(Statement s) {
-		this.statements.add(s);
-		return this;
-	}
 
 	public String getType() {
 		return "Statement Block";
