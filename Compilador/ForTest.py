@@ -4,9 +4,7 @@ for elem in secuencia:
 
 a = [1,2,3,4,5,6,7,8,9,10]
 for b in a:
-	print b
-	
-#a = [1,2,3,4,5,6,7,8,9,10]
-#for b in a
-#	print b
-# SOLO el mensaje de error
+	print b	
+v = [1,"h",2,'j',4]
+for h in v:
+	print h

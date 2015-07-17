@@ -12,7 +12,3 @@ if 7 > 9 * 4 :
 	print "Que pinto?"
 else :
 	print "Muy bien!"
-
-#if 3 > 2
-#	print 3
-# El error hace q solo imprima el mensaje de error 
