@@ -3,5 +3,5 @@ def superTest(x,y):
 
 
 a = superTest(x = 2, y = 3)
-type (a)
+print type (a)
 print type(a)

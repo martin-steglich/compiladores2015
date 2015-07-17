@@ -2525,7 +2525,7 @@ public class BinaryOperationExpression extends Expression {
 				|| (stringDict)) {
 			res = new BooleanType(true);
 		} else if (stringString) {
-			boolean resultado = ((StringType) izq).getText().equals(
+			boolean resultado = !((StringType) izq).getText().equals(
 					((StringType) der).getText());
 			res = new BooleanType(resultado);
 		} else if (longInt) {

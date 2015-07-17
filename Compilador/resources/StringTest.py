@@ -1,17 +1,17 @@
 a = 'uno'
 print a
-type (a)
+print type (a)
 b = "dos"
 print b
-type(b)
+print type(b)
 c = '''tres
 		tres'''
 print c
-type(c)
+print type(c)
 d = """seis
 seis"""
 print d
-type(d)
+print type(d)
 i = a * 3
 print i
 e = a + b

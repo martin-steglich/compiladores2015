@@ -3,4 +3,3 @@ b = a.index(2, 4)
 
 print b
 
-#List : index(value,start) Revisar

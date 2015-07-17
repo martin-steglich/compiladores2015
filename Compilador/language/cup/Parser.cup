@@ -176,6 +176,9 @@ simple_statement ::= expression:e {: RESULT = new ExpressionStatement((Expressio
 					 | ID:i LEFTRECT expression:k RIGHTRECT ASSIGN expression:e {: IdentifierExpression id = new IdentifierExpression(i, ileft);
 					 															   RESULT = new AssignStructuredTypeStatement(id, e, k, ileft);
 					 															:}
+					 | ID:i LEFTRECT expression:s COLON expression:f RIGHTRECT ASSIGN expression:e {: IdentifierExpression id = new IdentifierExpression(i, ileft);
+					 															   RESULT = new AssignStructuredTypeStatement(id, e, s, f, ileft);
+					 															:}
 					 | RETURN expression_list_list:list {:	setReturnFlag(true, listleft, listright); 
 					 									   	RESULT = new ReturnStatement((List<Expression>) list, 0);
 					 									:};
