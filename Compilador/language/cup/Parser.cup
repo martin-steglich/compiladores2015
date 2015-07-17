@@ -165,7 +165,7 @@ simple_statement_list ::= simple_statement:stmt simple_statement_list:list {:
 						  	RESULT = new ArrayList<Statement>(); 
 						  :};
 						  
-simple_statement ::= expression:e {: RESULT = e; :} 
+simple_statement ::= expression:e {: RESULT = new ExpressionStatement((Expression)e, eleft); :} 
 					 | ID:i ASSIGN expression:e {: RESULT = new AssignStatement(i, (Expression)e, ileft); :}
 					 | PRINT:p expression:e {: RESULT = new PrintStatement((Expression) e, pleft); :}
 					 | TYPE:t LEFTPARENTHESE expression:e RIGHTPARENTHESE {: RESULT = new TypeStatement((Expression) e, tleft);	:}

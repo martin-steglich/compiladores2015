@@ -14,7 +14,8 @@ public class Tester {
 		//ProgramParser.parse("FunctionTest.py");
 		//ProgramParser.parse("ForStatement.py");
 		//ProgramParser.parse("PredefinedFunctions.py");
-		ProgramParser.parse("ForTest.py");
+		//ProgramParser.parse("ForStatement.py");
+		ProgramParser.parse("FunctionCallByReferenceTest.py");
 	}
 	
 }
