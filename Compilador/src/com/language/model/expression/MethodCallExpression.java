@@ -248,7 +248,7 @@ public class MethodCallExpression extends Expression {
 					}
 					
 					if(index == list.size())
-						ret = new NoneType();
+						throw new CompilerException(lineNumber, value.getAsString() + " no esta en la lista comenzando en la posicion " + start);
 					else
 						ret = new IntegerType(index);
 					
