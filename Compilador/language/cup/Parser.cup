@@ -168,7 +168,6 @@ simple_statement_list ::= simple_statement:stmt simple_statement_list:list {:
 simple_statement ::= expression:e {: RESULT = new ExpressionStatement((Expression)e, eleft); :} 
 					 | ID:i ASSIGN expression:e {: RESULT = new AssignStatement(i, (Expression)e, ileft); :}
 					 | PRINT:p expression:e {: RESULT = new PrintStatement((Expression) e, pleft); :}
-					 | TYPE:t LEFTPARENTHESE expression:e RIGHTPARENTHESE {: RESULT = new TypeStatement((Expression) e, tleft);	:}
 					 | BREAK :b  {: setBreakFlag(true, bleft, bright);
 									RESULT = new BreakStatement(bleft); 
 								:}
@@ -212,6 +211,7 @@ expression ::= INTEGER:i {: RESULT = new IntegerExpression(Integer.valueOf(i), i
 			| MINUS expression:e {: RESULT = new UnaryOperationExpression("-", (Expression)e, eleft); :}
 			| NOT_BIT expression:e {: RESULT = new UnaryOperationExpression("~", (Expression)e, eleft); :}
 			| NOT expression:e {: RESULT = new UnaryOperationExpression("not", (Expression)e, eleft); :}
+			| TYPE:t LEFTPARENTHESE expression:e RIGHTPARENTHESE {: RESULT = new TypeExpression((Expression) e, tleft);	:}
 			| RAW_INPUT LEFTPARENTHESE expression:e RIGHTPARENTHESE {: RESULT = new ReadExpression((Expression) e, eleft); :}
 			| tuple_expression:e {: RESULT = e; :}
 			| map_expression:e {: RESULT = e; :}
