@@ -1,25 +1,25 @@
 a = 2 + 3
-type (a)
+print type (a)
 b = 2.0 + 3.0
-type (b)
+print type (b)
 c = 2.0 + 3
-type(c)
+print type(c)
 d = 2L + 3L
-type (d)
+print type (d)
 e = 2L + 3 
-type(e)
+print type(e)
 f = 2L + 3.0
-type(f)
+print type(f)
 a = a - 0.2
-type (a)
+print type (a)
 b = b - 1
-type (b)
+print type (b)
 c = c - 2.0
-type(c)
+print type(c)
 d = d - 1.2
-type (d)
+print type (d)
 e = e - 3 
-type(e)
+print type(e)
 f = f - 0.2
-type(f)
+print type(f)
 g = f + "hola"

@@ -35,4 +35,3 @@ l = ( 4 >= 80 ) >> 400
 print l
 
 m = "vol" & "go"
-print m

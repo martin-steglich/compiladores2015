@@ -1,22 +1,23 @@
-uno = 2 >= 40
-print uno
-
-dos = 30 <= 30
-print dos
-
-tres = 1 + 5 == 10 - 8 + 2
-print tres
-
-cuatro = 40 != 60
-print cuatro
-
-
-a = 2 + 3 == 5  and 4 * 3 > 3
+a = 5 == 5  and 4  < 3
 print a
 
-b = 2 != 3 == 5  and 4 * 3 > 3
+b = 5 == 5  and 4 > 3
 print b
 
-c = 2 + 5 != 3 - 1 == 5  or  4 - 5  * 3 ** 2 > 3
+c = 5 != 5 and 3 != 3
 print c
 
+d = 5 == 5 or 3 == 3
+print d
+
+e = 5 != 5 or 3 == 3
+print e
+
+f = 5 < 5 or 3 > 3
+print f
+
+g = not (4 > 2)
+print g
+
+h = not (4 < 2)
+print h 
