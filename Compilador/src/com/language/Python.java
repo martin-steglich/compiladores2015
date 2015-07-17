@@ -21,7 +21,7 @@ public class Python {
 			//ProgramParser.parse("resources/ContinueTest.py");
 			//ProgramParser.parse("resources/ForTest.py");
 			//ProgramParser.parse("resources/FunctionCallByReferenceTest.py");
-			ProgramParser.parse("resources/PredefinedFunctions.py");
+			ProgramParser.parse("resources/PreFunctionsListTest.py");
 			
 			//ProgramParser.parse("resources/FunctionTest.py");
 			
