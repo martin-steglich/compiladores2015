@@ -1,5 +1,5 @@
 a = 2 + 3
-type (a)
+print type (a)
 b = 2.0 + 3.0
 print type (b)
 c = 2.0 + 3
