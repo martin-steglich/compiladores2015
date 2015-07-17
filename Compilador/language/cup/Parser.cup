@@ -373,7 +373,14 @@ argument_list ::= expression : e {: ArrayList<Expression> args = new ArrayList<E
 										 :};
 
 function_call ::= ID:id LEFTPARENTHESE function_call_parameters_list:params RIGHTPARENTHESE {: RESULT = new FunctionCallExpression(id, (List<Expression>) params, idleft); :}
-				| ID:id LEFTPARENTHESE function_call_parameters_map:params RIGHTPARENTHESE {: RESULT = new FunctionCallExpression(id, (Map<IdentifierExpression, Expression>) params, idleft); :}
+				| ID:id LEFTPARENTHESE function_call_parameters_map:params RIGHTPARENTHESE {:   List<IdentifierExpression> functionParams = new ArrayList<>();
+																								List<Expression> callParams = new ArrayList<>();
+																								for(ArrayList<Expression> param : (List<ArrayList<Expression>>)params){
+																									functionParams.add(0,(IdentifierExpression)param.get(0));
+																									callParams.add(0,param.get(1));
+																								} 
+																								RESULT = new FunctionCallExpression(id, functionParams, callParams, idleft); 
+																							:}
 				| ID:id LEFTPARENTHESE RIGHTPARENTHESE {: RESULT = new FunctionCallExpression(id, idleft); :};
 
 function_call_parameters_list ::= function_call_parameters_list:list COMMA expression:e   {: ((ArrayList<Expression>)list).add(0,e);
@@ -385,12 +392,18 @@ function_call_parameters_list ::= function_call_parameters_list:list COMMA expre
 									   :};
 
 function_call_parameters_map ::= function_call_parameters_map:params COMMA ID:i ASSIGN expression:e {: IdentifierExpression id = new IdentifierExpression(i, ileft);
-																										((Map<IdentifierExpression, Expression>)params).put(id, e);
+																										ArrayList<Expression> param = new ArrayList<>();
+																										param.add(id); 
+																										param.add(e);
+																										((List<ArrayList<Expression>>)params).add(param);
 																										RESULT = params;
 																							  		:}
-								| ID:i ASSIGN expression:e {: Map<IdentifierExpression, Expression> params = new HashMap<IdentifierExpression, Expression>();
-															  IdentifierExpression id = new IdentifierExpression(i, ileft);
-															  ((Map<IdentifierExpression, Expression>)params).put(id, e);
+								| ID:i ASSIGN expression:e {: IdentifierExpression id = new IdentifierExpression(i, ileft);
+															  List<ArrayList<Expression>> params = new ArrayList<>();
+															  ArrayList<Expression> param = new ArrayList<>();
+															  param.add(id); 
+															  param.add(e);
+															  params.add(param);
 														      RESULT = params;
 												  		   :};
 								  

@@ -26,7 +26,7 @@ public class FunctionCallExpression extends Expression {
 
 	String funcName;
 	List<Expression> paramsList;
-	Map<IdentifierExpression, Expression> paramsMap;
+	List<IdentifierExpression> functionParams;
 	int lineNumber;
 
 	public FunctionCallExpression(String funcName, List<Expression> params,
@@ -36,10 +36,11 @@ public class FunctionCallExpression extends Expression {
 		this.lineNumber = linenum;
 	}
 
-	public FunctionCallExpression(String funcName,
-			Map<IdentifierExpression, Expression> params, int linenum) {
+	public FunctionCallExpression(String funcName, List<IdentifierExpression> functionParams,
+			List<Expression> params, int linenum) {
 		this.funcName = funcName;
-		this.paramsMap = params;
+		this.paramsList = params;
+		this.functionParams = functionParams;
 		this.lineNumber = linenum;
 	}
 
@@ -71,13 +72,22 @@ public class FunctionCallExpression extends Expression {
 		FunctionStatement fun = s.findFunction(funcName);
 
 		if (fun != null) {
-			if (paramsList != null) {
+			if (paramsList != null){
 				int countArgumentsDef = fun.getParams().size();
 				int countArgumentsCall = paramsList.size();
 				if (countArgumentsDef != countArgumentsCall) {
 					throw new CompilerException(lineNumber,
 							"La funcion tiene cantidad incorrecta de parametros");
 				} else {
+					if(functionParams != null){
+						for(int j = 0; j < countArgumentsCall; j++){
+							String param = functionParams.get(j).getId();
+							String funcParam = fun.getParams().get(j).getId();
+							if(!param.equals(funcParam))
+								throw new CompilerException(lineNumber, "La funcion " + funcName + " no tiene un parametro de nombre " + param);
+						}
+					}
+					
 					for (int i = 0; i < countArgumentsCall; i++) {
 						String var = fun.getParams().get(i).getId();
 						Expression e = paramsList.get(i);
@@ -89,7 +99,7 @@ public class FunctionCallExpression extends Expression {
 							fun.getFuncBody(), lineNumber);
 					typeRet = block.execute();
 				}
-			} else {
+			}else {
 				BlockFunctionStatement block = new BlockFunctionStatement(
 						fun.getFuncBody(), lineNumber);
 				typeRet = block.execute();
