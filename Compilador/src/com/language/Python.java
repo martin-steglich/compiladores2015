@@ -17,6 +17,7 @@ public class Python {
 			ProgramParser.parse("resources/ListTest.py");
 			ProgramParser.parse("resources/MapTest.py");
 			ProgramParser.parse("resources/TupleTest.py");
+			ProgramParser.parse("resources/StringTest.py");
 			ProgramParser.parse("resources/IfTest.py");
 			ProgramParser.parse("resources/WhileTest.py");
 			ProgramParser.parse("resources/BreakTest.py");
