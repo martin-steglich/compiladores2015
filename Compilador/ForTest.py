@@ -1,3 +1,12 @@
 secuencia = ["uno","dos","tres"]
 for elem in secuencia:
 	print elem
+
+a = [1,2,3,4,5,6,7,8,9,10]
+for b in a:
+	print b
+	
+#a = [1,2,3,4,5,6,7,8,9,10]
+#for b in a
+#	print b
+# SOLO el mensaje de error
